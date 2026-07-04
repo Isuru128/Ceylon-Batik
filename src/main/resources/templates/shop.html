@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Ceylon Batik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="/css/style.css" rel="stylesheet" onerror="this.onerror=null;this.href='../static/css/style.css'">
+</head>
+<body>
+<header class="site-header fixed-top">
+    <nav class="navbar navbar-expand-xl">
+        <div class="container-fluid px-3 px-lg-5">
+            <a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html">
+                <span class="brand-mark">CB</span>
+                <span><strong>Ceylon Batik</strong><small>සිලෝන් බතික්</small></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavigation">
+                <ul class="navbar-nav mx-auto mb-3 mb-xl-0">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/shop.html}" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sarees">Sarees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#dresses">Dresses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sarongs">Sarongs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sale">Sale</a></li>
+                </ul>
+                <div class="header-actions">
+                    <a class="login-link" th:href="@{/login.html}" href="login.html"><i class="fa-regular fa-user"></i><span>Login</span></a>
+                    <a class="icon-btn count-btn" th:href="@{/wishlist.html}" href="wishlist.html" aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span class="count-badge" id="wishlistCount">0</span></a>
+                    <a class="icon-btn count-btn" th:href="@{/cart.html}" href="cart.html" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><span class="count-badge" id="cartCount">0</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="inner-main">
+    <section class="page-hero shop-page-hero">
+        <div class="container-fluid px-3 px-lg-5">
+            <p class="eyebrow">Shop Collection</p>
+            <h1>Batik wear for every occasion</h1>
+            <p class="sinhala-line">ඔබේ විලාසිතාවට ගැළපෙන ශ්‍රී ලාංකික බතික්</p>
+        </div>
+    </section>
+
+    <section class="section-space compact-section">
+        <div class="container-fluid px-3 px-lg-5">
+            <div class="shop-layout">
+                <aside class="shop-sidebar">
+                    <h2>Filter</h2>
+                    <button class="filter-btn active" type="button" data-filter="all">All Products</button>
+                    <button class="filter-btn" type="button" data-filter="saree">Sarees</button>
+                    <button class="filter-btn" type="button" data-filter="dress">Dresses</button>
+                    <button class="filter-btn" type="button" data-filter="sarong">Sarongs</button>
+                    <button class="filter-btn" type="button" data-filter="couple">Couple Sets</button>
+                    <button class="filter-btn" type="button" data-filter="sale">Sale</button>
+                </aside>
+
+                <div class="row g-4 product-grid shop-products">
+                    <div class="col-sm-6 col-xl-4 product-item" id="dresses" data-category="dress sale">
+                        <article class="mini-product" data-product-slug="island-bloom-batik-dress">
+                            <div class="mini-product-media">
+                                <div class="product-gallery" aria-label="Island Bloom Batik Dress views">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Island Bloom Batik Dress">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Island Bloom fabric detail">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Island Bloom styled batik look">
+                                </div>
+                            </div>
+                            <div><span>Dress</span><h3>Island Bloom Batik Dress</h3><p>Rs. 6,990</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div>
+                        </article>
+                    </div>
+                    <div class="col-sm-6 col-xl-4 product-item" id="sarees" data-category="saree">
+                        <article class="mini-product" data-product-slug="heritage-wax-art-saree">
+                            <div class="mini-product-media">
+                                <div class="product-gallery" aria-label="Heritage Wax Art Saree views">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Heritage Wax Art Saree">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Heritage Wax Art drape detail">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Heritage Wax Art styling">
+                                </div>
+                            </div>
+                            <div><span>Saree</span><h3>Heritage Wax Art Saree</h3><p>Rs. 9,450</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div>
+                        </article>
+                    </div>
+                    <div class="col-sm-6 col-xl-4 product-item" id="sarongs" data-category="sarong couple sale">
+                        <article class="mini-product" data-product-slug="sunset-batik-sarong-set">
+                            <div class="mini-product-media">
+                                <div class="product-gallery" aria-label="Sunset Batik Sarong Set views">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Sunset Batik Sarong Set">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Sunset Batik sarong color detail">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Sunset Batik craft detail">
+                                </div>
+                            </div>
+                            <div><span>Couple</span><h3>Sunset Batik Sarong Set</h3><p>Rs. 10,900</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div>
+                        </article>
+                    </div>
+                    <div class="col-sm-6 col-xl-4 product-item" data-category="dress"><article class="mini-product pattern-card" data-product-slug="made-to-measure-batik-look"><div class="mini-product-media"><div class="pattern-preview"></div></div><div><span>Custom</span><h3>Made-to-Measure Batik Look</h3><p>From Rs. 7,500</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div></article></div>
+                    <div class="col-sm-6 col-xl-4 product-item" data-category="dress">
+                        <article class="mini-product" data-product-slug="lagoon-breeze-batik-kaftan">
+                            <div class="mini-product-media">
+                                <div class="product-gallery" aria-label="Lagoon Breeze Batik Kaftan views">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Lagoon Breeze Batik Kaftan">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Lagoon Breeze styling detail">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Lagoon Breeze textile detail">
+                                </div>
+                            </div>
+                            <div><span>Resort</span><h3>Lagoon Breeze Batik Kaftan</h3><p>Rs. 5,850</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div>
+                        </article>
+                    </div>
+                    <div class="col-sm-6 col-xl-4 product-item" data-category="saree sale"><article class="mini-product pattern-card pattern-blue" data-product-slug="blue-lotus-evening-batik-saree"><div class="mini-product-media"><div class="pattern-preview"></div></div><div><span>Sale</span><h3>Blue Lotus Evening Batik Saree</h3><p>Rs. 11,750</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div></article></div>
+                    <div class="col-sm-6 col-xl-4 product-item" data-category="sarong men">
+                        <article class="mini-product" data-product-slug="temple-flower-shirt-and-sarong">
+                            <div class="mini-product-media">
+                                <div class="product-gallery" aria-label="Temple Flower Shirt and Sarong views">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Temple Flower Shirt and Sarong">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Temple Flower batik pattern">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Temple Flower fabric colorway">
+                                </div>
+                            </div>
+                            <div><span>Men</span><h3>Temple Flower Shirt & Sarong</h3><p>Rs. 8,400</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div>
+                        </article>
+                    </div>
+                    <div class="col-sm-6 col-xl-4 product-item" data-category="gift dress"><article class="mini-product pattern-card pattern-pink" data-product-slug="celebration-batik-gift-box"><div class="mini-product-media"><div class="pattern-preview"></div></div><div><span>Gift</span><h3>Celebration Batik Gift Box</h3><p>Rs. 4,950</p><button class="btn add-cart-btn" data-cart type="button"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div></article></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/script.js}" src="/js/script.js" onerror="this.onerror=null;this.src='../static/js/script.js'"></script>
+</body>
+</html>

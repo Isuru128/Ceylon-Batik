@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail | Ceylon Batik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="/css/style.css" rel="stylesheet" onerror="this.onerror=null;this.href='../static/css/style.css'">
+</head>
+<body class="product-detail-body">
+<header class="site-header fixed-top">
+    <nav class="navbar navbar-expand-xl">
+        <div class="container-fluid px-3 px-lg-5">
+            <a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html">
+                <span class="brand-mark">CB</span>
+                <span><strong>Ceylon Batik</strong><small>සිලෝන් බතික්</small></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavigation">
+                <ul class="navbar-nav mx-auto mb-3 mb-xl-0">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/shop.html}" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/shop.html#sarees}" href="shop.html#sarees">Sarees</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/shop.html#dresses}" href="shop.html#dresses">Dresses</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/shop.html#sarongs}" href="shop.html#sarongs">Sarongs</a></li>
+                </ul>
+                <div class="header-actions">
+                    <a class="login-link" th:href="@{/login.html}" href="login.html"><i class="fa-regular fa-user"></i><span>Login</span></a>
+                    <a class="icon-btn count-btn" th:href="@{/wishlist.html}" href="wishlist.html" aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span class="count-badge" id="wishlistCount">0</span></a>
+                    <a class="icon-btn count-btn" th:href="@{/cart.html}" href="cart.html" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><span class="count-badge" id="cartCount">0</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="inner-main product-detail-main" data-product-detail>
+    <section class="product-detail-section">
+        <div class="container-fluid px-3 px-lg-5">
+            <div class="product-detail-layout">
+                <div class="detail-gallery" data-detail-gallery>
+                    <div class="detail-thumbs" data-detail-thumbs>
+                        <button class="detail-thumb is-active" type="button" aria-label="Show Island Bloom Batik Dress image 1">
+                            <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Island Bloom Batik Dress view 1">
+                        </button>
+                        <button class="detail-thumb" type="button" aria-label="Show Island Bloom Batik Dress image 2">
+                            <img th:src="@{/images/02.jpg}" src="/images/02.jpg" onerror="this.onerror=null;this.src='../static/images/02.jpg'" alt="Island Bloom Batik Dress view 2">
+                        </button>
+                        <button class="detail-thumb" type="button" aria-label="Show Island Bloom Batik Dress image 3">
+                            <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" onerror="this.onerror=null;this.src='../static/images/03.jpeg'" alt="Island Bloom Batik Dress view 3">
+                        </button>
+                    </div>
+                    <div class="detail-main-media">
+                        <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" onerror="this.onerror=null;this.src='../static/images/01.jpeg'" alt="Island Bloom Batik Dress" data-detail-main-image>
+                        <span class="detail-sale-badge" data-detail-sale>Sale</span>
+                        <button class="detail-zoom-btn" type="button" aria-label="View larger image"><i class="fa-solid fa-expand"></i></button>
+                    </div>
+                </div>
+                <section class="detail-info" aria-labelledby="detailTitle">
+                    <div class="detail-title-row">
+                        <p class="eyebrow" data-detail-category>Cotton Dresses</p>
+                    </div>
+                    <h1 id="detailTitle" data-detail-title>Island Bloom Batik Dress Set</h1>
+                    <div class="detail-price">
+                        <span class="old-price" data-detail-old-price>Rs. 8,950</span>
+                        <strong data-detail-price>Rs. 6,990</strong>
+                    </div>
+                    <div class="quick-payments detail-payments">
+                        <p>or 3 X <strong data-detail-installment-koko>Rs. 2,330</strong> with <span>KokoPay</span></p>
+                        <p>3 X <strong data-detail-installment-three>Rs. 2,330</strong> or 4.5% cashback with <span>mintPay</span></p>
+                    </div>
+                    <p class="detail-description" data-detail-description>A breathable cotton batik dress set with soft movement, vivid island color, and hand-finished pattern work for daytime events, holidays, and warm-weather occasions.</p>
+                    <ul class="detail-benefits">
+                        <li><i class="fa-solid fa-truck-fast"></i> Cash on delivery available</li>
+                        <li><i class="fa-solid fa-credit-card"></i> KokoPay, MintPay installments</li>
+                        <li><i class="fa-solid fa-shirt"></i> Handmade Sri Lankan batik finish</li>
+                    </ul>
+                    <div class="shipping-meter">
+                        <p>Add <strong data-detail-free-shipping>Rs. 5,010</strong> to cart and get free shipping.</p>
+                        <span><i data-detail-shipping-bar></i></span>
+                    </div>
+                    <div class="detail-actions">
+                        <div class="quantity-stepper" aria-label="Quantity selector">
+                            <button type="button" data-detail-qty-minus aria-label="Decrease quantity">-</button>
+                            <input type="number" value="1" min="1" data-detail-qty aria-label="Quantity">
+                            <button type="button" data-detail-qty-plus aria-label="Increase quantity">+</button>
+                        </div>
+                        <button class="btn add-cart-btn" type="button" data-cart><i class="fa-solid fa-cart-plus"></i>Add to Cart</button>
+                        <button class="btn fit-on-me-btn" type="button" data-fit-on-me><i class="fa-solid fa-person-dress"></i>Fit on me</button>
+                    </div>
+                    <div class="detail-secondary-actions">
+                        <button type="button" data-wishlist><i class="fa-regular fa-heart"></i>Add to wishlist</button>
+                    </div>
+                    <dl class="detail-meta">
+                        <div><dt>SKU</dt><dd data-detail-sku>CB-D214</dd></div>
+                        <div><dt>Category</dt><dd data-detail-meta-category>Cotton Dresses</dd></div>
+                        <div><dt>Tags</dt><dd data-detail-tags>batik dress, cotton dress, handmade, island wear, resort wear</dd></div>
+                    </dl>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-tabs-section">
+        <div class="container-fluid px-3 px-lg-5">
+            <div class="detail-tabs" role="tablist" aria-label="Product information">
+                <button class="active" type="button" data-detail-tab="description">Description</button>
+                <button type="button" data-detail-tab="additional">Additional Information</button>
+                <button type="button" data-detail-tab="reviews">Reviews (0)</button>
+                <button type="button" data-detail-tab="shipping">Shipping & Delivery</button>
+            </div>
+            <div class="detail-tab-panel" data-detail-panel="description">
+                <table class="detail-spec-table">
+                    <tbody data-detail-specs>
+                    <tr><th>fabric</th><td>Cotton voile</td></tr>
+                    <tr><th>length</th><td>Midi length with coordinated batik finish</td></tr>
+                    <tr><th>wash care</th><td>Hand wash separately in cold water</td></tr>
+                    <tr><th>fit</th><td>Relaxed everyday fit</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="detail-tab-panel d-none" data-detail-panel="additional">
+                <p>Each piece is finished in small batches, so motif placement and color density can vary slightly from the product images.</p>
+            </div>
+            <div class="detail-tab-panel d-none" data-detail-panel="reviews">
+                <p>No reviews yet. Be the first to review this Ceylon Batik product.</p>
+            </div>
+            <div class="detail-tab-panel d-none" data-detail-panel="shipping">
+                <p>Orders are packed from Sri Lanka with local delivery options and pickup support for Colombo-area customers.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/script.js}" src="/js/script.js" onerror="this.onerror=null;this.src='../static/js/script.js'"></script>
+</body>
+</html>
