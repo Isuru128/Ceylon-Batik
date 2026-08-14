@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story - Ceylon Batik</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Base CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    
+    <style>
+        /* Story Page Hero */
+        .story-page-hero {
+            position: relative;
+            background: url('/images/02.jpg') center/cover no-repeat;
+            padding: 140px 20px 100px;
+            color: var(--batik-white, #ffffff);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            background-attachment: fixed;
+        }
+
+        .story-page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--batik-ink, #1f235f);
+            opacity: 0.75;
+            z-index: 1;
+        }
+
+        .story-page-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInDown 1.2s ease forwards;
+        }
+
+        .story-page-hero-content .eyebrow {
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: block;
+            color: var(--batik-soft-pink, #FFC0D9);
+        }
+
+        .story-page-hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .story-page-hero-content .sinhala-subtitle {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            font-size: 1.2rem;
+            color: var(--batik-cream, #F9F9E0);
+            margin-bottom: 30px;
+        }
+
+        .hero-divider {
+            width: 80px;
+            height: 3px;
+            background-color: var(--batik-pink, #FF90BC);
+            margin: 0 auto;
+        }
+
+        /* Origin Section */
+        .story-origin {
+            padding: 100px 0;
+            background-color: var(--batik-white, #ffffff);
+        }
+
+        .origin-img-wrapper {
+            position: relative;
+            padding: 20px;
+        }
+
+        .origin-img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 40px; right: 40px;
+            border: 3px solid var(--batik-gold, #d49a2a);
+            z-index: 0;
+        }
+
+        .origin-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transform: translate(20px, 20px);
+        }
+
+        .origin-content {
+            padding: 40px;
+        }
+
+        .origin-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--batik-ink, #1f235f);
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+        }
+
+        .origin-content p {
+            color: var(--batik-text, #242333);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .pull-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--batik-ink, #1f235f);
+            padding-left: 25px;
+            border-left: 4px solid var(--batik-pink, #FF90BC);
+            margin: 40px 0;
+            line-height: 1.6;
+        }
+
+        /* Process Section */
+        .story-process {
+            background-color: var(--batik-cream, #F9F9E0);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .section-header .eyebrow {
+            color: var(--batik-pink, #FF90BC);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--batik-ink, #1f235f);
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+        }
+
+        .process-card {
+            background: var(--batik-white, #ffffff);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(31, 35, 95, 0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            height: 100%;
+            position: relative;
+            margin-top: 25px;
+        }
+
+        .process-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(31, 35, 95, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: var(--batik-pink, #FF90BC);
+            color: var(--batik-white, #ffffff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 4px solid var(--batik-cream, #F9F9E0);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .process-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+            margin-top: 15px;
+        }
+
+        .process-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--batik-ink, #1f235f);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .process-card p {
+            color: var(--batik-muted, #71717a);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Values Section */
+        .story-values {
+            background-color: var(--batik-ink, #1f235f);
+            padding: 100px 0;
+            color: var(--batik-white, #ffffff);
+            text-align: center;
+        }
+
+        .value-card {
+            padding: 40px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .value-card:hover {
+            border-color: var(--batik-pink, #FF90BC);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .value-stat {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--batik-pink, #FF90BC);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .value-title {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--batik-cream, #F9F9E0);
+            font-weight: 300;
+        }
+
+        /* Artisans Section */
+        .story-artisans {
+            padding: 100px 0;
+            background-color: var(--batik-white, #ffffff);
+        }
+
+        .artisans-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--batik-ink, #1f235f);
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+        }
+        
+        .artisans-content p {
+            color: var(--batik-text, #242333);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .artisan-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .artisan-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .artisan-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 30px 20px 20px;
+            background: linear-gradient(to top, rgba(31, 35, 95, 0.9) 0%, rgba(31, 35, 95, 0) 100%);
+            color: var(--batik-white, #ffffff);
+            transform: translateY(10px);
+            transition: transform 0.4s ease;
+        }
+
+        .artisan-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .artisan-card:hover .artisan-overlay {
+            transform: translateY(0);
+        }
+
+        .artisan-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+        }
+
+        .artisan-role {
+            font-size: 0.9rem;
+            color: var(--batik-soft-pink, #FFC0D9);
+            margin: 0;
+        }
+
+        /* CTA Banner */
+        .story-cta {
+            background: linear-gradient(135deg, var(--batik-ink, #1f235f) 0%, #3a3276 100%);
+            padding: 100px 20px;
+            text-align: center;
+            color: var(--batik-white, #ffffff);
+        }
+
+        .story-cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .story-cta p {
+            font-size: 1.2rem;
+            color: var(--batik-cream, #F9F9E0);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline-light {
+            border-color: var(--batik-white, #ffffff);
+            color: var(--batik-white, #ffffff);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--batik-white, #ffffff);
+            color: var(--batik-ink, #1f235f);
+        }
+        
+        .cb-btn {
+            background-color: var(--batik-pink, #FF90BC);
+            color: var(--batik-white, #ffffff);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .cb-btn:hover {
+            background-color: #ff72a8;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 144, 188, 0.3);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 991px) {
+            .origin-content { padding: 40px 0 0 0; }
+            .origin-image { transform: translate(10px, 10px); }
+            .origin-img-wrapper::before { bottom: 20px; right: 20px; }
+            .artisans-content { margin-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header fixed-top">
+        <nav class="navbar navbar-expand-xl">
+            <div class="container-fluid px-3 px-lg-5">
+                <a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html">
+                    <span class="brand-mark">CB</span>
+                    <span><strong>Ceylon Batik</strong><small>සිලෝන් බතික්</small></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavigation">
+                    <ul class="navbar-nav mx-auto mb-3 mb-xl-0">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/}" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/shop.html}" href="shop.html">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link active" th:href="@{/story.html}" href="story.html">Our Story</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/contact.html}" href="contact.html">Contact</a></li>
+                    </ul>
+                    <div class="header-actions">
+                        <!-- User menu — populated by script.js from localStorage -->
+                        <div id="userMenuSlot"></div>
+                        <a class="icon-btn count-btn" th:href="@{/wishlist.html}" href="wishlist.html" aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span class="count-badge" id="wishlistCount">0</span></a>
+                        <a class="icon-btn count-btn" th:href="@{/cart.html}" href="cart.html" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><span class="count-badge" id="cartCount">0</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="inner-main">
+        
+        <!-- Page Hero -->
+        <section class="page-hero story-page-hero">
+            <div class="story-page-hero-content container">
+                <span class="eyebrow">Est. 1987, Colombo, Sri Lanka</span>
+                <h1>Wax, colour, and a craft passed down through generations</h1>
+                <p class="sinhala-subtitle">ශ්රී ලංකාවේ ජනරාව පුරා ගෙනා බතික් කලාව</p>
+                <div class="hero-divider"></div>
+            </div>
+        </section>
+
+        <!-- Origin Section -->
+        <section class="story-origin">
+            <div class="container px-4 px-lg-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-5 mb-lg-0">
+                        <div class="origin-img-wrapper">
+                            <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" alt="Ceylon Batik Origin" class="origin-image">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 offset-lg-1">
+                        <div class="origin-content reveal-on-scroll">
+                            <h2>Born in the heart of Colombo</h2>
+                            <p>Founded in 1987 by a passionate family of batik artisans, Ceylon Batik began as a humble workshop in the vibrant streets of Colombo. Our vision was simple: to preserve the intricate beauty of traditional Sri Lankan batik while creating garments that resonate with modern elegance.</p>
+                            <p>We honor the ancient wax-resist dyeing techniques that have graced our island since the Dutch colonial era. Every motif we design is deeply rooted in our heritage, drawing inspiration from lush tropical flora, ancient temple artistry, and the endless Indian Ocean.</p>
+                            <p>Today, run by the third generation, Ceylon Batik stands as a testament to authenticity and enduring craft. We remain committed to sustainable practices, empowering local communities, and delivering unparalleled island fashion to the world.</p>
+                            <blockquote class="pull-quote">
+                                "Every thread we weave carries the memory of the wax, the dye, and the hands that shaped it."
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Craft Process Section -->
+        <section class="story-process">
+            <div class="container px-4 px-lg-5">
+                <div class="section-header reveal-on-scroll">
+                    <span class="eyebrow">Our Technique</span>
+                    <h2>The Art of Wax & Dye</h2>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="process-card reveal-on-scroll">
+                            <div class="step-number">1</div>
+                            <span class="process-icon">🖊️</span>
+                            <h3>Sketch & Design</h3>
+                            <p>Artists meticulously sketch intricate motifs inspired by Sri Lanka's vibrant flora, majestic temples, and ocean waves onto premium cotton and silk.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="process-card reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <div class="step-number">2</div>
+                            <span class="process-icon">🕯️</span>
+                            <h3>Wax Resist</h3>
+                            <p>Hot liquid wax is delicately applied by hand using a traditional canting tool, creating a protective barrier against the dyes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="process-card reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <div class="step-number">3</div>
+                            <span class="process-icon">🎨</span>
+                            <h3>Natural Dye</h3>
+                            <p>The fabric is immersed in vivid natural dye baths. The process is repeated layer by layer to build complex, rich colour palettes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="process-card reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <div class="step-number">4</div>
+                            <span class="process-icon">✨</span>
+                            <h3>Finishing</h3>
+                            <p>The wax is carefully boiled away, revealing the final design. The fabric is then washed and sun-dried, ready to be tailored.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="story-values">
+            <div class="container px-4 px-lg-5">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="value-card reveal-on-scroll">
+                            <span class="value-stat">38+ Years</span>
+                            <span class="value-title">Of handcraft tradition</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="value-card reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <span class="value-stat">100% Handmade</span>
+                            <span class="value-title">Every single piece</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="value-card reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <span class="value-stat">Finest</span>
+                            <span class="value-title">Sri Lankan Artisans</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Artisans Section -->
+        <section class="story-artisans">
+            <div class="container px-4 px-lg-5">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="artisans-content reveal-on-scroll">
+                            <h2>Meet the hands behind the craft</h2>
+                            <p>Our dedicated team of 12 master artisans in Colombo is the heartbeat of Ceylon Batik. Each member of our artisan family has spent decades perfecting their specific role in the batik lifecycle.</p>
+                            <p>From the precise hand of the pattern designer to the intuition of our dye masters and the meticulous care of our finishing experts, it takes a harmonious community to bring each garment to life. We take pride in sustaining these traditional livelihoods and passing the torch to a new generation of creatives.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="row g-4">
+                            <div class="col-sm-6">
+                                <div class="artisan-card reveal-on-scroll">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" alt="Kumari D.">
+                                    <div class="artisan-overlay">
+                                        <h3 class="artisan-name">Kumari D.</h3>
+                                        <p class="artisan-role">Wax Artist, 18 years</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="artisan-card reveal-on-scroll" style="transition-delay: 0.1s;">
+                                    <img th:src="@{/images/02.jpg}" src="/images/02.jpg" alt="Nalaka S.">
+                                    <div class="artisan-overlay">
+                                        <h3 class="artisan-name">Nalaka S.</h3>
+                                        <p class="artisan-role">Dye Master, 12 years</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="artisan-card reveal-on-scroll" style="transition-delay: 0.2s;">
+                                    <img th:src="@{/images/03.jpeg}" src="/images/03.jpeg" alt="Priya F.">
+                                    <div class="artisan-overlay">
+                                        <h3 class="artisan-name">Priya F.</h3>
+                                        <p class="artisan-role">Pattern Designer, 9 years</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="artisan-card reveal-on-scroll" style="transition-delay: 0.3s;">
+                                    <img th:src="@{/images/01.jpeg}" src="/images/01.jpeg" alt="Ruwan A.">
+                                    <div class="artisan-overlay">
+                                        <h3 class="artisan-name">Ruwan A.</h3>
+                                        <p class="artisan-role">Finishing Expert, 15 years</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="story-cta">
+            <div class="container reveal-on-scroll">
+                <h2>Wear a piece of our story</h2>
+                <p>Every Ceylon Batik garment is a chapter in 38 years of island craft. Explore our latest arrivals or reach out to us for bespoke creations.</p>
+                <div class="cta-buttons">
+                    <a th:href="@{/shop.html}" href="shop.html" class="cb-btn">Shop Collection &rarr;</a>
+                    <a th:href="@{/contact.html}" href="contact.html" class="btn btn-outline-light">Contact Us &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer" id="contact-footer">
+        <div class="container-fluid px-3 px-lg-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-xl-3">
+                    <a class="footer-brand" th:href="@{/}" href="/"><span class="brand-mark">CB</span><span>Ceylon Batik</span></a>
+                    <p>Traditional Sri Lankan batik wear for celebrations, gifting, resort days, and everyday elegance.</p>
+                </div>
+                <div class="col-6 col-xl-2"><h3>Shop</h3><a href="/shop.html">New Arrivals</a><a href="/shop.html">Sale</a><a href="/shop.html">Sarees</a><a href="/shop.html">Sarongs</a></div>
+                <div class="col-6 col-xl-2"><h3>Help</h3><a href="#">Delivery</a><a href="#">Returns</a><a href="#">Size Guide</a><a href="/contact.html">Contact Us</a></div>
+                <div class="col-md-6 col-xl-3"><h3>Visit Us</h3><p>Colombo showroom, Sri Lanka</p><p>Phone: +94 77 123 4567</p><p>Email: hello@ceylonbatik.lk</p></div>
+                <div class="col-md-6 col-xl-2"><h3>Follow</h3><div class="social-links"><a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a><a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a></div></div>
+            </div>
+            <div class="footer-bottom"><span>&copy; 2026 Ceylon Batik. All rights reserved.</span><span>Designed by iTech Software Solutions.</span></div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/script.js}" src="/js/script.js"></script>
+</body>
+</html>

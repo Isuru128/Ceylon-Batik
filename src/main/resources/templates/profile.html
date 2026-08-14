@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>My Profile - Pets Paradise</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link th:href="@{/img/petsparadise.png}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <style>
+        .profile-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 60px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 52px;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            border: 5px solid white;
+        }
+
+        .section-title {
+            color: #2f2f2f;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+        }
+
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .input-group-text {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .info-badge {
+            background: linear-gradient(135deg, #e7f3ff 0%, #d0e7ff 100%);
+            color: #0066cc;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #0066cc;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.1);
+        }
+
+        .info-badge i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .address-complete {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .address-incomplete {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border-left-color: #ffc107;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        }
+
+        .btn-change-password {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-change-password:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .password-strength {
+            height: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+            margin-top: 5px;
+        }
+
+        .password-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                padding: 25px;
+            }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+
+            .btn-save {
+                width: 100%;
+                margin-top: 15px;
+            }
+        }
+
+        /* Password Modal Styles */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            border: none;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar Start -->
+<div class="container-fluid sticky-top bg-white shadow-sm">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+            <a th:href="@{/}" class="navbar-brand">
+                <h1 class="m-0 text-uppercase text-primary d-flex align-items-center">
+                    <img th:src="@{/img/Petsparadise.png}"
+                         alt="Pets Paradise"
+                         style="height: 2.5rem; width: 2.5rem; object-fit: contain; margin-right: 0.5rem;">
+                    <span>Pets Paradise</span>
+                </h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a th:href="@{/}" class="nav-item nav-link">Home</a>
+                    <a th:href="@{/appointment}" class="nav-item nav-link">Appointment</a>
+                    <a th:href="@{/shop}" class="nav-item nav-link">Shop</a>
+                    <a th:href="@{/about}" class="nav-item nav-link">About Us</a>
+                    <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
+
+                    <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+
+                        <!-- Show this if NO user is logged in -->
+                        <li th:if="${session.user == null}" class="nav-item">
+                            <a class="nav-link" th:href="@{/login}">
+                                <img src="/img/user.svg" alt="Login">
+                            </a>
+                        </li>
+
+                        <!-- Show this if user is logged in -->
+                        <li th:if="${session.user != null}" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/img/user.svg" alt="User" width="20" height="20" class="me-2">
+                                <span class="d-none d-md-inline" th:text="${session.user.name}">User</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item text-center" th:href="@{/dashboard}">
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-center" th:href="@{/profile}">
+                                        Profile
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger text-center" th:href="@{/logout}">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/cart}">
+                                <img src="/img/cart.svg" alt="Cart">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Profile Section -->
+<div class="profile-section">
+    <div class="container">
+
+        <!-- Success/Error Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Success!</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Error!</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="profile-card">
+
+                    <!-- Profile Header -->
+                    <div class="profile-header">
+                        <div class="profile-avatar" th:text="${#strings.substring(user.name, 0, 1)}">U</div>
+                        <h2 class="mb-2" th:text="${user.name}">User Name</h2>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-envelope me-2"></i><span th:text="${user.email}">user@example.com</span>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-user me-2"></i>Username: <span th:text="${user.username}">username</span>
+                        </p>
+                    </div>
+
+                    <!-- Address Status Info -->
+                    <div class="info-badge"
+                         th:classappend="${user.phone != null && user.address != null && user.city != null && user.state != null && user.postalCode != null} ? 'address-complete' : 'address-incomplete'">
+                        <i class="fas"
+                           th:classappend="${user.phone != null && user.address != null && user.city != null && user.state != null && user.postalCode != null} ? 'fa-check-circle' : 'fa-exclamation-triangle'"></i>
+                        <strong th:text="${user.phone != null && user.address != null && user.city != null && user.state != null && user.postalCode != null} ? 'Shipping Address Complete ✓' : 'Complete Your Shipping Address'">Status</strong>
+                        <p class="mb-0 mt-2" th:if="${user.phone == null || user.address == null || user.city == null || user.state == null || user.postalCode == null}">
+                            Please fill in all shipping address fields below to enable checkout functionality.
+                        </p>
+                    </div>
+
+                    <!-- Profile Update Form -->
+                    <form th:action="@{/profile/update}" method="POST" id="profileForm">
+
+                        <!-- Personal Information -->
+                        <h4 class="section-title">
+                            <i class="fas fa-user me-2"></i>Personal Information
+                        </h4>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label required-field">Full Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           th:value="${user.name}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label required-field">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           th:value="${user.email}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label required-field">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                           th:value="${user.phone}" pattern="[0-9]{10}"
+                                           placeholder="0771234567" required>
+                                </div>
+                                <small class="text-muted">Required for order delivery (10 digits)</small>
+                            </div>
+                        </div>
+
+                        <!-- Security Section -->
+                        <h4 class="section-title">
+                            <i class="fas fa-lock me-2"></i>Security
+                        </h4>
+
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="input-group flex-grow-1">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    <input type="password" class="form-control" value="••••••••" readonly>
+                                </div>
+                                <button type="button" class="btn btn-change-password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                    <i class="fas fa-edit me-2"></i>Change Password
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <h4 class="section-title">
+                            <i class="fas fa-shipping-fast me-2"></i>Shipping Address
+                        </h4>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label required-field">Street Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" class="form-control" id="address" name="address"
+                                       th:value="${user.address}"
+                                       placeholder="House number and street name" required>
+                            </div>
+                            <small class="text-muted">This will be used as your default shipping address</small>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="city" class="form-label required-field">City</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                    <input type="text" class="form-control" id="city" name="city"
+                                           th:value="${user.city}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="state" class="form-label required-field">Province</label>
+                                <select id="state" name="state" class="form-select" required>
+                                    <option value="">Select province</option>
+                                    <option value="Central" th:selected="${user.state == 'Central'}">Central</option>
+                                    <option value="Eastern" th:selected="${user.state == 'Eastern'}">Eastern</option>
+                                    <option value="North Central" th:selected="${user.state == 'North Central'}">North Central</option>
+                                    <option value="Northern" th:selected="${user.state == 'Northern'}">Northern</option>
+                                    <option value="North Western" th:selected="${user.state == 'North Western'}">North Western</option>
+                                    <option value="Sabaragamuwa" th:selected="${user.state == 'Sabaragamuwa'}">Sabaragamuwa</option>
+                                    <option value="Southern" th:selected="${user.state == 'Southern'}">Southern</option>
+                                    <option value="Uva" th:selected="${user.state == 'Uva'}">Uva</option>
+                                    <option value="Western" th:selected="${user.state == 'Western'}">Western</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="postalCode" class="form-label required-field">Postal Code</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
+                                    <input type="text" class="form-control" id="postalCode" name="postalCode"
+                                           th:value="${user.postalCode}" pattern="[0-9]{5}"
+                                           placeholder="12345" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 flex-wrap gap-3">
+                            <a th:href="@{/dashboard}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                            <button type="submit" class="btn btn-save">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">
+                    <i class="fas fa-lock me-2"></i>Change Password
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/profile/change-password}" method="POST" id="changePasswordForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label required-field">Current Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label required-field">New Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword"
+                                   minlength="6" required>
+                        </div>
+                        <div class="password-strength" id="passwordStrength"></div>
+                        <small class="password-hint">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Password must be at least 6 characters long
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label required-field">Confirm New Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-check"></i></span>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                   minlength="6" required>
+                        </div>
+                        <small id="passwordMatch" class="text-muted"></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-change-password" id="submitPasswordChange">
+                        <i class="fas fa-save me-2"></i>Update Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Profile Form validation
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        const phone = document.getElementById('phone').value;
+        const postalCode = document.getElementById('postalCode').value;
+
+        // Validate phone number (10 digits)
+        if (!/^[0-9]{10}$/.test(phone)) {
+            e.preventDefault();
+            alert('Please enter a valid 10-digit phone number');
+            document.getElementById('phone').focus();
+            return false;
+        }
+
+        // Validate postal code (5 digits)
+        if (!/^[0-9]{5}$/.test(postalCode)) {
+            e.preventDefault();
+            alert('Please enter a valid 5-digit postal code');
+            document.getElementById('postalCode').focus();
+            return false;
+        }
+    });
+
+    // Password strength indicator
+    document.getElementById('newPassword').addEventListener('input', function(e) {
+        const password = e.target.value;
+        const strengthBar = document.getElementById('passwordStrength');
+
+        let strength = 0;
+        if (password.length >= 6) strength++;
+        if (password.length >= 10) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+        strengthBar.style.width = (strength * 20) + '%';
+
+        if (strength <= 1) {
+            strengthBar.style.backgroundColor = '#dc3545';
+        } else if (strength <= 3) {
+            strengthBar.style.backgroundColor = '#ffc107';
+        } else {
+            strengthBar.style.backgroundColor = '#28a745';
+        }
+    });
+
+    // Password confirmation matching
+    document.getElementById('confirmPassword').addEventListener('input', function(e) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = e.target.value;
+        const matchText = document.getElementById('passwordMatch');
+        const submitBtn = document.getElementById('submitPasswordChange');
+
+        if (confirmPassword === '') {
+            matchText.textContent = '';
+            submitBtn.disabled = false;
+        } else if (newPassword === confirmPassword) {
+            matchText.textContent = '✓ Passwords match';
+            matchText.style.color = '#28a745';
+            submitBtn.disabled = false;
+        } else {
+            matchText.textContent = '✗ Passwords do not match';
+            matchText.style.color = '#dc3545';
+            submitBtn.disabled = true;
+        }
+    });
+
+    // Password change form validation
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const currentPassword = document.getElementById('currentPassword').value;
+
+        if (!currentPassword) {
+            e.preventDefault();
+            alert('Please enter your current password');
+            return false;
+        }
+
+        if (newPassword.length < 6) {
+            e.preventDefault();
+            alert('New password must be at least 6 characters long');
+            return false;
+        }
+
+        if (newPassword !== confirmPassword) {
+            e.preventDefault();
+            alert('New passwords do not match');
+            return false;
+        }
+    });
+
+    // Reset modal on close
+    document.getElementById('changePasswordModal').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('changePasswordForm').reset();
+        document.getElementById('passwordStrength').style.width = '0%';
+        document.getElementById('passwordMatch').textContent = '';
+        document.getElementById('submitPasswordChange').disabled = false;
+    });
+</script>
+
+</body>
+</html>
