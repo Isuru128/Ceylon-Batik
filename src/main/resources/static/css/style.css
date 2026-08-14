@@ -232,6 +232,7 @@ input {
     font-weight: 600;
 }
 
+<<<<<<< HEAD
 /* ── User menu (logged-in state) ───────────────────────────────────────────── */
 .cb-user-menu {
     position: relative;
@@ -325,6 +326,8 @@ input {
 /* ──────────────────────────────────────────────────────────────────────────── */
 
 
+=======
+>>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
 .count-badge {
     position: absolute;
     top: -9px;
@@ -1372,6 +1375,7 @@ body.modal-open {
     font-weight: 700;
 }
 
+<<<<<<< HEAD
 .form-message--error {
     color: #e05252;
 }
@@ -1381,6 +1385,8 @@ body.modal-open {
 }
 
 
+=======
+>>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
 .site-footer {
     padding: 64px 0 26px;
     color: #dbdce8;
