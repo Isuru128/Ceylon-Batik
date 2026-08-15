@@ -15,16 +15,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-/**
- * Manual Mongo configuration.
- *
- * NOTE: because @EnableMongoRepositories is declared explicitly here,
- * Spring Boot's automatic Mongo configuration backs off and expects
- * this class to supply MongoClient / MongoDatabaseFactory / MongoTemplate
- * itself. That's why mongoTemplate previously couldn't be found - nothing
- * was defining it. The three beans below fix that, reading the connection
- * string straight from application.properties (spring.data.mongodb.uri).
- */
 @Configuration
 @EnableMongoRepositories(basePackages = "com.ceylonbatik.repository")
 @EnableMongoAuditing
@@ -53,9 +43,6 @@ public class MongoConfig {
         return new MongoTemplate(mongoDatabaseFactory);
     }
 
-    /**
-     * Tests MongoDB connection when Spring Boot starts.
-     */
     @Bean
     public ApplicationRunner mongoConnectionLogger(MongoTemplate mongoTemplate) {
 
