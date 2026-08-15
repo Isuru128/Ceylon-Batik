@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ─── User Menu (localStorage-based auth) ─────────────────────────────────────
 // Reads the user object saved to localStorage on login and renders either the
 // Login button or a name-dropdown into every #userMenuSlot on the page.
@@ -68,10 +67,8 @@
             .replace(/"/g, "&quot;");
     }
 })();
-// ─────────────────────────────────────────────────────────────────────────────
 
-=======
->>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
+// ─────────────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
     if (window.location.protocol === "file:") {
         document.querySelectorAll("img[src^='/images/']").forEach((image) => {
@@ -672,7 +669,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         return;
                     }
                 }
-
                 throw new Error("AI endpoint unavailable");
             } catch (error) {
                 resultPreview.src = await createLocalFitPreview(customerImageSrc, productPreview.src, product.title);
