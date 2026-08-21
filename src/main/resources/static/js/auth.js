@@ -53,5 +53,33 @@ window.CBAuth = {
         }
 
         return await response.json();
+    },
+
+    adminLogin: async function(contact, password) {
+
+        const response = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contact,
+                password
+            })
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            let message;
+            try {
+                const parsed = JSON.parse(text);
+                message = parsed.message || parsed.error || text;
+            } catch {
+                message = text || "Admin authentication failed.";
+            }
+            throw new Error(message);
+        }
+
+        return await response.json();
     }
 };
