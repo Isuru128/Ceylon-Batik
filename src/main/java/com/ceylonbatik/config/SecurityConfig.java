@@ -53,6 +53,7 @@ public class SecurityConfig {
                                 "/profile.html",
                                 "/profile",
                                 "/admin/**",
+                                "/api/admin/**",
                                 "/api/auth/**",
                                 "/api/products/**",
                                 "/css/**",

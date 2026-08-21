@@ -16,12 +16,15 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AdminService adminService;
 
     public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       AdminService adminService) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.adminService = adminService;
     }
 
     // ================= REGISTER =================
@@ -125,40 +128,7 @@ public class AuthService {
     }
 
     // ================= ADMIN LOGIN =================
-
     public AuthResponse adminLogin(LoginRequest request) {
-
-        if (request.getContact() == null || request.getContact().isBlank()) {
-            throw new RuntimeException("Admin email or username is required.");
-        }
-
-        if (request.getPassword() == null || request.getPassword().isBlank()) {
-            throw new RuntimeException("Password is required.");
-        }
-
-        String contact = request.getContact().trim();
-        String password = request.getPassword().trim();
-
-        // Default super admin login check
-        if (("admin@ceylonbatik.lk".equalsIgnoreCase(contact) || "admin".equalsIgnoreCase(contact))
-                && ("admin123".equals(password) || "admin".equals(password))) {
-            return new AuthResponse("Admin login successful", "Ceylon Batik Admin", "admin@ceylonbatik.lk", "ADMIN");
-        }
-
-        // Database user admin lookup fallback
-        User user = null;
-        if (ContactUtils.isEmail(contact)) {
-            user = userRepository.findByEmail(contact).orElse(null);
-        } else if (ContactUtils.isPhone(contact)) {
-            user = userRepository.findByPhone(contact).orElse(null);
-        }
-
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            user.setLastLoginAt(LocalDateTime.now());
-            userRepository.save(user);
-            return new AuthResponse("Admin login successful", user.getFullName(), user.getEmail() != null ? user.getEmail() : user.getPhone(), "ADMIN");
-        }
-
-        throw new RuntimeException("Invalid admin credentials or unauthorized access.");
+        return adminService.login(request);
     }
 }
