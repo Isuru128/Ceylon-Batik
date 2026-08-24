@@ -17,7 +17,7 @@
 <header class="site-header fixed-top">
     <nav class="navbar navbar-expand-xl">
         <div class="container-fluid px-3 px-lg-5">
-            <a class="navbar-brand brand-lockup" th:href="@{/index.html}" href="#">
+            <a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html">
                 <span class="brand-mark">CB</span>
                 <span>
                     <strong>Ceylon Batik</strong>
@@ -31,16 +31,15 @@
 
             <div class="collapse navbar-collapse" id="mainNavigation">
                 <ul class="navbar-nav mx-auto mb-3 mb-xl-0">
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/index.html}" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/}" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/shop.html}" href="shop.html">Shop</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" th:href="@{/shop.html#sarees}" href="shop.html#sarees">Batik Sarees</a></li>
-                            <li><a class="dropdown-item" th:href="@{/shop.html#dresses}" href="shop.html#dresses">Dresses & Kaftans</a></li>
+                            <li><a class="dropdown-item" th:href="@{/shop.html#dresses}" href="shop.html#dresses">Dresses &amp; Kaftans</a></li>
                             <li><a class="dropdown-item" th:href="@{/shop.html#sarongs}" href="shop.html#sarongs">Sarongs</a></li>
                         </ul>
-
                     </li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/shop.html}" href="shop.html">New Collection</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/story.html}" href="story.html">Our Story</a></li>
@@ -57,18 +56,6 @@
                     <div id="userMenuSlot"></div>
 
                     <!-- Wishlist -->
-                    <li class="nav-item"><a class="nav-link" href="#story">Our Story</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </div>
-
-                <div class="header-actions">
-                    <button class="icon-btn" type="button" data-search-toggle aria-label="Open search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                    <a class="login-link" th:href="@{/login.html}" href="login.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Login</span>
-                    </a>
                     <a class="icon-btn count-btn" th:href="@{/wishlist.html}" href="wishlist.html" aria-label="Wishlist">
                         <i class="fa-regular fa-heart"></i>
                         <span class="count-badge" id="wishlistCount">0</span>
@@ -120,37 +107,6 @@
             </div>
         </div>
     </section>
-
-<!--    <section class="category-strip" aria-label="Featured categories">-->
-<!--        <div class="container-fluid px-3 px-lg-5">-->
-<!--            <div class="row g-3">-->
-<!--                <div class="col-6 col-lg-3">-->
-<!--                    <a class="category-pill" href="#sarees">-->
-<!--                        <i class="fa-solid fa-fan"></i>-->
-<!--                        <span>Batik Sarees</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--                <div class="col-6 col-lg-3">-->
-<!--                    <a class="category-pill" href="#dresses">-->
-<!--                        <i class="fa-solid fa-shirt"></i>-->
-<!--                        <span>Dresses</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--                <div class="col-6 col-lg-3">-->
-<!--                    <a class="category-pill" href="#sarongs">-->
-<!--                        <i class="fa-solid fa-person"></i>-->
-<!--                        <span>Sarongs</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--                <div class="col-6 col-lg-3">-->
-<!--                    <a class="category-pill" href="#gifts">-->
-<!--                        <i class="fa-solid fa-gift"></i>-->
-<!--                        <span>Gift Vouchers</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
 
     <section class="section-space" id="shop">
         <span class="anchor-target" id="new"></span>
@@ -461,11 +417,7 @@
                         <span><i class="fa-solid fa-check"></i> Lightweight cotton</span>
                         <span><i class="fa-solid fa-check"></i> Island-inspired colors</span>
                     </div>
-<<<<<<< HEAD
-                    <a class="btn cb-btn" href="story.html">Explore more...</a>
-=======
-                    <a class="btn cb-btn" href="#shop">Explore Products</a>
->>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
+                    <a class="btn cb-btn" th:href="@{/story.html}" href="story.html">Explore more...</a>
                 </div>
             </div>
         </div>
