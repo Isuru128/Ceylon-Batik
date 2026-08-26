@@ -363,35 +363,48 @@
     </section>
 </main>
 
-<footer class="site-footer">
+<footer class="site-footer" id="contact">
     <div class="container-fluid px-3 px-lg-5">
-        <div class="row g-4 justify-content-between">
-            <div class="col-lg-4">
-                <a class="brand-lockup footer-brand" th:href="@{/}" href="index.html">
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <a class="footer-brand" th:href="@{/}" href="/">
                     <span class="brand-mark">CB</span>
-                    <span>
-                        <strong>Ceylon Batik</strong>
-                        <small>සිලෝන් බතික්</small>
-                    </span>
+                    <span>Ceylon Batik</span>
                 </a>
-                <p class="footer-about">Handcrafting timeless Sri Lankan batik wear with rich island dyes, wax-resist motifs, and modern styling for everyday living.</p>
+                <p>Traditional Sri Lankan batik wear for celebrations, gifting, resort days, and everyday elegance.</p>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a th:href="@{/shop.html}" href="shop.html">Shop Collection</a></li>
-                    <li><a th:href="@{/story.html}" href="story.html">Our Story</a></li>
-                    <li><a th:href="@{/contact.html}" href="contact.html">Contact Us</a></li>
-                    <li><a th:href="@{/cart.html}" href="cart.html">Shopping Cart</a></li>
-                </ul>
+            <div class="col-6 col-xl-2">
+                <h3>Shop</h3>
+                <a th:href="@{/shop.html}" href="shop.html">New Arrivals</a>
+                <a th:href="@{/shop.html#sale}" href="shop.html#sale">Sale</a>
+                <a th:href="@{/shop.html#sarees}" href="shop.html#sarees">Sarees</a>
+                <a th:href="@{/shop.html#sarongs}" href="shop.html#sarongs">Sarongs</a>
             </div>
-            <div class="col-sm-6 col-lg-3">
-                <h3>Customer Service</h3>
-                <p>Hotline: +94 77 123 4567<br>Email: support@ceylonbatik.lk<br>Mon – Sat: 9:00 AM – 7:00 PM</p>
+            <div class="col-6 col-xl-2">
+                <h3>Help</h3>
+                <a href="#">Delivery</a>
+                <a href="#">Returns</a>
+                <a href="#">Size Guide</a>
+                <a th:href="@{/contact.html}" href="contact.html">Contact Us</a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <h3>Visit Us</h3>
+                <p>Colombo showroom, Sri Lanka</p>
+                <p>Phone: +94 77 123 4567</p>
+                <p>Email: hello@ceylonbatik.lk</p>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <h3>Follow</h3>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Ceylon Batik (Pvt) Ltd. All rights reserved.</p>
+            <span>&copy; 2026 Ceylon Batik. All rights reserved.</span>
+            <a href="https://my-portfolio-web-isuru128s-projects.vercel.app/" target="_blank" rel="noopener noreferrer" class="designed-by-btn">Designed by Isuru Rathnayake.</a>
         </div>
     </div>
 </footer>
