@@ -1432,12 +1432,37 @@ body.modal-open {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
     gap: 12px;
     margin-top: 42px;
     padding-top: 22px;
     border-top: 1px solid rgba(255, 255, 255, 0.14);
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.9rem;
+}
+
+.designed-by-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    color: var(--batik-cream);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.designed-by-btn:hover {
+    color: var(--batik-ink) !important;
+    background: var(--batik-pink);
+    border-color: var(--batik-pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(255, 144, 188, 0.35);
 }
 
 .inner-main {
