@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroSection = document.querySelector(".hero-section");
     const heroMedia = document.querySelector(".hero-media img");
     const heroCopy = document.querySelector(".hero-copy");
-    const heroCard = document.querySelector(".hero-card");
     const backToTop = document.getElementById("backToTop");
     const searchBar = document.getElementById("searchBar");
     const siteSearch = document.getElementById("siteSearch");
@@ -159,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const revealElements = [
         heroCopy,
-        heroCard,
         ...document.querySelectorAll(".category-pill, .section-heading, .filter-btn, .product-item, .craft-image, .craft-section .col-lg-6:last-child, .newsletter-content, .site-footer .row > *")
     ].filter(Boolean);
 
@@ -1287,4 +1285,44 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // ─── AI Try-On Pop-up Modal ──────────────────────────────────────────────
+    const aiModal = document.getElementById("aiModal");
+    const closeAiModal = document.getElementById("closeAiModal");
+    const dismissAiModal = document.getElementById("dismissAiModal");
+
+    if (aiModal) {
+        const showModal = () => {
+            aiModal.classList.add("is-active");
+            aiModal.setAttribute("aria-hidden", "false");
+        };
+
+        const hideModal = () => {
+            aiModal.classList.remove("is-active");
+            aiModal.setAttribute("aria-hidden", "true");
+        };
+
+        // Automatically show pop-up on website visit
+        setTimeout(showModal, 700);
+
+        // Close on top-right cross icon click
+        closeAiModal?.addEventListener("click", hideModal);
+
+        // Close on dismissal button click
+        dismissAiModal?.addEventListener("click", hideModal);
+
+        // Close on backdrop click (outside the modal card)
+        aiModal.addEventListener("click", (e) => {
+            if (e.target === aiModal) {
+                hideModal();
+            }
+        });
+
+        // Close on Escape key press
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && aiModal.classList.contains("is-active")) {
+                hideModal();
+            }
+        });
+    }
 });
