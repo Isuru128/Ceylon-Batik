@@ -26,15 +26,18 @@ public class AdminService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.ceylonbatik.security.JwtUtils jwtUtils;
 
     public AdminService(AdminDao adminDao,
                         ProductRepository productRepository,
                         UserRepository userRepository,
-                        PasswordEncoder passwordEncoder) {
+                        PasswordEncoder passwordEncoder,
+                        com.ceylonbatik.security.JwtUtils jwtUtils) {
         this.adminDao = adminDao;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     // ================= ADMIN AUTHENTICATION =================
@@ -68,11 +71,14 @@ public class AdminService {
 
         log.info("Admin logged in successfully: {}", admin.getEmail());
 
+        String token = jwtUtils.generateToken(admin.getUsername(), admin.getFullName(), admin.getEmail(), "ROLE_ADMIN");
+
         return new AuthResponse(
                 "Admin login successful",
                 admin.getFullName(),
                 admin.getEmail(),
-                admin.getRole()
+                "ROLE_ADMIN",
+                token
         );
     }
 
@@ -80,7 +86,7 @@ public class AdminService {
 
     public AdminDashboardStatsDTO getDashboardStats() {
         long totalProducts = productRepository.count();
-        long activeProducts = productRepository.findByActiveTrue().size();
+        long activeProducts = productRepository.countByActiveTrue();
         long totalUsers = userRepository.count();
 
         // Example default metrics for simulated sales/orders if not yet in dedicated collection
@@ -136,16 +142,13 @@ public class AdminService {
             Admin defaultAdmin = new Admin();
             defaultAdmin.setUsername(defaultUsername);
             defaultAdmin.setEmail(defaultEmail);
-            defaultAdmin.setFullName("Ceylon Batik Super Admin");
+            defaultAdmin.setFullName("Ceylon Batik Admin");
             defaultAdmin.setPassword(passwordEncoder.encode("admin123"));
-            defaultAdmin.setRole("SUPER_ADMIN");
             defaultAdmin.setActive(true);
             defaultAdmin.setCreatedAt(LocalDateTime.now());
 
             adminDao.save(defaultAdmin);
-            log.info(">>> Successfully initialized default admin credentials in MongoDB admins collection: {} / admin123", defaultEmail);
-        } else {
-            log.info(">>> Admin account already exists in MongoDB admins collection.");
+            log.info(">>> Initialized default admin credentials in MongoDB admins collection: {}", defaultEmail);
         }
     }
 }

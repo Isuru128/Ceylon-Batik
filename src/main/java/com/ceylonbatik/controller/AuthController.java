@@ -50,19 +50,4 @@ public class AuthController {
                     .body(e.getMessage());
         }
     }
-
-    @PostMapping("/admin/login")
-    public ResponseEntity<?> adminLogin(
-            @RequestBody LoginRequest request
-    ){
-        try {
-            return ResponseEntity.ok(
-                    authService.adminLogin(request)
-            );
-        } catch(Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-    }
 }

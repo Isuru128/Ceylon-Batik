@@ -871,15 +871,15 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">SMTP Username / Email *</label>
-                                <input type="email" class="form-control" id="smtpUser" value="sales@ceylonbatik.lk" required>
+                                <input type="email" class="form-control" id="smtpUser" placeholder="e.g. sales@ceylonbatik.lk" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">App Password / Auth Secret *</label>
-                                <input type="password" class="form-control" id="smtpPass" value="••••••••••••••••" required>
+                                <input type="password" class="form-control" id="smtpPass" placeholder="Enter App Password" required>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Sender Display Name</label>
-                                <input type="text" class="form-control" id="smtpSenderName" value="Ceylon Batik Offers">
+                                <input type="text" class="form-control" id="smtpSenderName" placeholder="e.g. Ceylon Batik">
                             </div>
 
                             <button type="button" class="btn btn-outline-secondary w-100 mb-2" id="btnTestSMTP">
@@ -1150,13 +1150,26 @@ The Ceylon Batik Team</textarea>
 
             // Save Product Form
             const productForm = document.getElementById("productForm");
+
+            function getAdminHeaders(custom = {}) {
+                const headers = { "Content-Type": "application/json", ...custom };
+                try {
+                    const adminUser = JSON.parse(localStorage.getItem("adminUser") || "null");
+                    if (adminUser && adminUser.token) {
+                        headers["Authorization"] = "Bearer " + adminUser.token;
+                    }
+                } catch {}
+                return headers;
+            }
+
+            // Product Form Submit (Create / Update)
             productForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 const id = document.getElementById("prodId").value;
                 const title = document.getElementById("prodTitle").value.trim();
                 const category = document.getElementById("prodCategory").value;
-                const price = Number(document.getElementById("prodPrice").value);
-                const oldPrice = Number(document.getElementById("prodOldPrice").value) || 0;
+                const price = parseFloat(document.getElementById("prodPrice").value) || 0;
+                const oldPrice = parseFloat(document.getElementById("prodOldPrice").value) || null;
                 const slug = document.getElementById("prodSlug").value.trim() || title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
                 const image = document.getElementById("prodImage").value.trim() || "/images/01.jpeg";
                 const description = document.getElementById("prodDescription").value.trim();
@@ -1170,7 +1183,7 @@ The Ceylon Batik Team</textarea>
                     const url = id ? `/api/products/${id}` : "/api/products";
                     const res = await fetch(url, {
                         method,
-                        headers: { "Content-Type": "application/json" },
+                        headers: getAdminHeaders(),
                         body: JSON.stringify(payload)
                     });
                     if (res.ok) {
@@ -1214,6 +1227,10 @@ The Ceylon Batik Team</textarea>
             function deleteProduct(id) {
                 if (confirm("Are you sure you want to delete this product?")) {
                     products = products.filter(p => p.id !== id);
+                    fetch(`/api/products/${id}`, {
+                        method: "DELETE",
+                        headers: getAdminHeaders()
+                    }).catch(() => {});
                     renderProducts();
                     showToast("Product removed from catalog.");
                 }
@@ -1280,7 +1297,9 @@ The Ceylon Batik Team</textarea>
             // Load live stats from backend
             async function loadBackendStats() {
                 try {
-                    const res = await fetch("/api/admin/stats");
+                    const res = await fetch("/api/admin/stats", {
+                        headers: getAdminHeaders()
+                    });
                     if (res.ok) {
                         const stats = await res.json();
                         const statProdEl = document.getElementById("statProductCount");
@@ -1296,7 +1315,9 @@ The Ceylon Batik Team</textarea>
             // Load live products from backend
             async function loadBackendProducts() {
                 try {
-                    const res = await fetch("/api/products");
+                    const res = await fetch("/api/products", {
+                        headers: getAdminHeaders()
+                    });
                     if (res.ok) {
                         const dbProducts = await res.json();
                         if (Array.isArray(dbProducts) && dbProducts.length > 0) {

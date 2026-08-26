@@ -12,7 +12,7 @@
     <link th:href="@{/css/style.css}" href="/css/style.css" rel="stylesheet" onerror="this.onerror=null;this.href='../static/css/style.css'">
 </head>
 <body>
-<header class="site-header fixed-top"><nav class="navbar navbar-expand-xl"><div class="container-fluid px-3 px-lg-5"><a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html"><span class="brand-mark">CB</span><span><strong>Ceylon Batik</strong><small>සිලෝන් බතික්</small></span></a><div class="header-actions ms-auto"><a class="login-link" th:href="@{/shop.html}" href="shop.html"><i class="fa-solid fa-store"></i><span>Shop</span></a><a class="icon-btn count-btn" th:href="@{/cart.html}" href="cart.html" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><span class="count-badge" id="cartCount">0</span></a></div></div></nav></header>
+<header class="site-header fixed-top"><nav class="navbar navbar-expand-xl"><div class="container-fluid px-3 px-lg-5"><a class="navbar-brand brand-lockup" th:href="@{/}" href="index.html"><span class="brand-mark">CB</span><span><strong>Ceylon Batik</strong><small>සිලෝන් බතික්</small></span></a><div class="header-actions ms-auto"><div id="userMenuSlot"></div><a class="login-link" th:href="@{/shop.html}" href="shop.html"><i class="fa-solid fa-store"></i><span>Shop</span></a><a class="icon-btn count-btn" th:href="@{/cart.html}" href="cart.html" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><span class="count-badge" id="cartCount">0</span></a></div></div></nav></header>
 <main class="inner-main">
     <section class="page-hero"><div class="container-fluid px-3 px-lg-5"><p class="eyebrow">Saved Pieces</p><h1>Your Batik Wishlist</h1><p>Keep your favorite handcrafted pieces ready for your next order.</p></div></section>
     <section class="section-space compact-section">
@@ -25,6 +25,7 @@
         </div>
     </section>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/script.js}" src="/js/script.js" onerror="this.onerror=null;this.src='../static/js/script.js'"></script>
 </body>
 </html>

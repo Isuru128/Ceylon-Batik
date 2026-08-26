@@ -456,11 +456,17 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     };
 
+    let activeLightboxKeydownHandler = null;
+
     const openDetailImageLightbox = (src, alt) => {
         const existingLightbox = document.querySelector(".detail-image-lightbox");
 
         if (existingLightbox) {
             existingLightbox.remove();
+        }
+        if (activeLightboxKeydownHandler) {
+            document.removeEventListener("keydown", activeLightboxKeydownHandler);
+            activeLightboxKeydownHandler = null;
         }
 
         const lightbox = document.createElement("div");
@@ -478,10 +484,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const closeLightbox = () => {
             lightbox.remove();
             document.body.classList.remove("modal-open");
-            document.removeEventListener("keydown", handleLightboxKeydown);
+            if (activeLightboxKeydownHandler) {
+                document.removeEventListener("keydown", activeLightboxKeydownHandler);
+                activeLightboxKeydownHandler = null;
+            }
         };
 
-        const handleLightboxKeydown = (event) => {
+        activeLightboxKeydownHandler = (event) => {
             if (event.key === "Escape") {
                 closeLightbox();
             }
@@ -492,7 +501,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 closeLightbox();
             }
         });
-        document.addEventListener("keydown", handleLightboxKeydown);
+        document.addEventListener("keydown", activeLightboxKeydownHandler);
         lightbox.querySelector(".detail-lightbox-close")?.focus();
     };
 
@@ -1234,117 +1243,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formMessage.textContent = "Thank you. You are subscribed to Ceylon Batik updates.";
         formMessage.style.color = "#F9F9E0";
         newsletterForm.reset();
-    });
-
-    const loginForm = document.getElementById("loginForm");
-    const loginMessage = document.getElementById("loginMessage");
-    const signupForm = document.getElementById("signupForm");
-    const signupMessage = document.getElementById("signupMessage");
-    const registerForm = document.getElementById("registerForm");
-    const registerMessage = document.getElementById("registerMessage");
-    const authToggles = document.querySelectorAll("[data-auth-toggle]");
-
-    const showAuthPanel = (mode) => {
-        const showSignup = mode === "signup";
-
-        loginForm?.classList.toggle("auth-form-hidden", showSignup);
-        signupForm?.classList.toggle("auth-form-hidden", !showSignup);
-
-        if (showSignup) {
-            document.getElementById("signupName")?.focus();
-        } else {
-            document.getElementById("loginEmail")?.focus();
-        }
-    };
-
-    authToggles.forEach((toggle) => {
-        toggle.addEventListener("click", (event) => {
-            event.preventDefault();
-            showAuthPanel(toggle.dataset.authToggle || "login");
-        });
-    });
-
-    loginForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const email = document.getElementById("loginEmail")?.value.trim() || "";
-        const password = document.getElementById("loginPassword")?.value.trim() || "";
-
-        if (!email || !password) {
-            loginMessage.textContent = "Enter your email and password to continue.";
-            loginMessage.style.color = "#FF90BC";
-            return;
-        }
-
-        loginMessage.textContent = "Demo login ready. Connect this form to your backend next.";
-        loginMessage.style.color = "#1f235f";
-    });
-
-    signupForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const name = document.getElementById("signupName")?.value.trim() || "";
-        const email = document.getElementById("signupEmail")?.value.trim() || "";
-        const password = document.getElementById("signupPassword")?.value.trim() || "";
-        const confirm = document.getElementById("signupConfirm")?.value.trim() || "";
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-        if (!signupMessage) {
-            return;
-        }
-
-        if (!name || !isEmail || !password || !confirm) {
-            signupMessage.textContent = "Complete all sign-up fields with a valid email.";
-            signupMessage.style.color = "#FF90BC";
-            return;
-        }
-
-        if (password !== confirm) {
-            signupMessage.textContent = "Passwords do not match.";
-            signupMessage.style.color = "#FF90BC";
-            return;
-        }
-
-        signupMessage.textContent = "Account demo created. Opening the shop...";
-        signupMessage.style.color = "#1f235f";
-
-        window.setTimeout(() => {
-            window.location.href = "shop.html";
-        }, 700);
-    });
-
-    registerForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const name = document.getElementById("registerName")?.value.trim() || "";
-        const contact = document.getElementById("registerContact")?.value.trim() || "";
-        const password = document.getElementById("registerPassword")?.value.trim() || "";
-        const confirm = document.getElementById("registerConfirm")?.value.trim() || "";
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
-        const isPhone = /^\+?[0-9][0-9\s().-]{6,18}$/.test(contact);
-
-        if (!registerMessage) {
-            return;
-        }
-
-        if (!name || !(isEmail || isPhone) || !password || !confirm) {
-            registerMessage.textContent = "Complete all fields with a valid email or phone number.";
-            registerMessage.style.color = "#FF90BC";
-            return;
-        }
-
-        if (password !== confirm) {
-            registerMessage.textContent = "Passwords do not match.";
-            registerMessage.style.color = "#FF90BC";
-            return;
-        }
-
-        registerMessage.textContent = "Account demo created. Opening the shop...";
-        registerMessage.style.color = "#1f235f";
-
-        window.setTimeout(() => {
-            window.location.href = "shop.html";
-        }, 700);
     });
 
     const cartRows = document.querySelectorAll("[data-cart-row]");

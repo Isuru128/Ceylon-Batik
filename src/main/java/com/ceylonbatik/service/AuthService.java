@@ -16,15 +16,15 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AdminService adminService;
+    private final com.ceylonbatik.security.JwtUtils jwtUtils;
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       AdminService adminService) {
+                       com.ceylonbatik.security.JwtUtils jwtUtils) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.adminService = adminService;
+        this.jwtUtils = jwtUtils;
     }
 
     // ================= REGISTER =================
@@ -73,10 +73,15 @@ public class AuthService {
 
         userRepository.save(user);
 
+        String userContact = user.getEmail() != null ? user.getEmail() : user.getPhone();
+        String token = jwtUtils.generateToken(userContact, user.getFullName(), user.getEmail(), "ROLE_USER");
+
         return new AuthResponse(
                 "Registration successful",
                 user.getFullName(),
-                user.getEmail() != null ? user.getEmail() : user.getPhone()
+                userContact,
+                "ROLE_USER",
+                token
         );
     }
 
@@ -120,15 +125,15 @@ public class AuthService {
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.save(user);
 
+        String userContact = user.getEmail() != null ? user.getEmail() : user.getPhone();
+        String token = jwtUtils.generateToken(userContact, user.getFullName(), user.getEmail(), "ROLE_USER");
+
         return new AuthResponse(
                 "Login successful",
                 user.getFullName(),
-                user.getEmail() != null ? user.getEmail() : user.getPhone()
+                userContact,
+                "ROLE_USER",
+                token
         );
-    }
-
-    // ================= ADMIN LOGIN =================
-    public AuthResponse adminLogin(LoginRequest request) {
-        return adminService.login(request);
     }
 }

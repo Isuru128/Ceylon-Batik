@@ -119,16 +119,11 @@ src/main/resources/static/images/
 - Thymeleaf templates
 - Spring Web MVC
 - Spring Security dependency included
-<<<<<<< HEAD
 - MongoDB / Spring Data MongoDB
-=======
-- MongoDB dependency included
->>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
 - Bootstrap 5
 - Font Awesome
 - Custom CSS and JavaScript
 
-<<<<<<< HEAD
 ## MongoDB Setup
 
 The app is configured to use MongoDB through Spring Data MongoDB.
@@ -162,8 +157,6 @@ GET /api/products?category=saree
 GET /api/products/{slug}
 ```
 
-=======
->>>>>>> ac9d41ca05ba4f47616a845828a16c961401d343
 ## Running the Project
 
 Use the Maven wrapper from the project root.

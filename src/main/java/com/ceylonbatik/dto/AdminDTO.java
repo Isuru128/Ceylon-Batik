@@ -18,7 +18,6 @@ public class AdminDTO {
     private String username;
     private String email;
     private String fullName;
-    private String role;
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
@@ -32,7 +31,6 @@ public class AdminDTO {
                 admin.getUsername(),
                 admin.getEmail(),
                 admin.getFullName(),
-                admin.getRole(),
                 admin.isActive(),
                 admin.getCreatedAt(),
                 admin.getLastLoginAt()

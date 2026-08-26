@@ -25,13 +25,16 @@ public class AdminController {
     private final AdminService adminService;
     private final ProductService productService;
     private final UserRepository userRepository;
+    private final com.ceylonbatik.security.UserRequestContext userRequestContext;
 
     public AdminController(AdminService adminService,
                            ProductService productService,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           com.ceylonbatik.security.UserRequestContext userRequestContext) {
         this.adminService = adminService;
         this.productService = productService;
         this.userRepository = userRepository;
+        this.userRequestContext = userRequestContext;
     }
 
     // ================= ADMIN LOGIN =================
@@ -46,6 +49,19 @@ public class AdminController {
         }
     }
 
+    // ================= CURRENT REQUEST CONTEXT =================
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentAdminContext() {
+        return ResponseEntity.ok(Map.of(
+                "username", userRequestContext.getUsername() != null ? userRequestContext.getUsername() : "",
+                "email", userRequestContext.getEmail() != null ? userRequestContext.getEmail() : "",
+                "role", userRequestContext.getRole() != null ? userRequestContext.getRole() : "",
+                "authenticated", userRequestContext.isAuthenticated(),
+                "requestTime", userRequestContext.getRequestTimestamp().toString()
+        ));
+    }
+
     // ================= DASHBOARD METRICS =================
 
     @GetMapping("/stats")
@@ -56,9 +72,15 @@ public class AdminController {
     // ================= ADMIN PROFILE =================
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestParam String contact) {
+    public ResponseEntity<?> getProfile(@RequestParam(required = false) String contact) {
         try {
-            AdminDTO profile = adminService.getProfile(contact);
+            String queryContact = (contact != null && !contact.isBlank())
+                    ? contact
+                    : userRequestContext.getUsername();
+            if (queryContact == null || queryContact.isBlank()) {
+                queryContact = userRequestContext.getEmail();
+            }
+            AdminDTO profile = adminService.getProfile(queryContact);
             return ResponseEntity.ok(profile);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

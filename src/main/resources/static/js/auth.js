@@ -1,5 +1,27 @@
 window.CBAuth = {
 
+    getToken: function() {
+        try {
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            if (user && user.token) return user.token;
+            const admin = JSON.parse(localStorage.getItem("adminUser") || "null");
+            if (admin && admin.token) return admin.token;
+        } catch {}
+        return null;
+    },
+
+    getAuthHeaders: function(customHeaders = {}) {
+        const headers = {
+            "Content-Type": "application/json",
+            ...customHeaders
+        };
+        const token = this.getToken();
+        if (token) {
+            headers["Authorization"] = "Bearer " + token;
+        }
+        return headers;
+    },
+
     register: async function(data) {
 
         const response = await fetch("/api/auth/register", {
@@ -11,7 +33,6 @@ window.CBAuth = {
         });
 
         if (!response.ok) {
-            // Backend may return a plain string or a JSON object for errors
             const text = await response.text();
             let message;
             try {
@@ -23,7 +44,11 @@ window.CBAuth = {
             throw new Error(message);
         }
 
-        return await response.json();
+        const result = await response.json();
+        if (result && result.token) {
+            localStorage.setItem("user", JSON.stringify(result));
+        }
+        return result;
     },
 
     login: async function(contact, password) {
@@ -40,7 +65,6 @@ window.CBAuth = {
         });
 
         if (!response.ok) {
-            // Backend may return a plain string or a JSON object for errors
             const text = await response.text();
             let message;
             try {
@@ -52,7 +76,11 @@ window.CBAuth = {
             throw new Error(message);
         }
 
-        return await response.json();
+        const result = await response.json();
+        if (result && result.token) {
+            localStorage.setItem("user", JSON.stringify(result));
+        }
+        return result;
     },
 
     adminLogin: async function(contact, password) {
@@ -80,6 +108,10 @@ window.CBAuth = {
             throw new Error(message);
         }
 
-        return await response.json();
+        const result = await response.json();
+        if (result && result.token) {
+            localStorage.setItem("adminUser", JSON.stringify(result));
+        }
+        return result;
     }
 };

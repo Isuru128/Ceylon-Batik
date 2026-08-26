@@ -1,5 +1,7 @@
 package com.ceylonbatik.config;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.bson.Document;
@@ -15,9 +17,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
-@EnableMongoRepositories(basePackages = "com.ceylonbatik.repository")
 @EnableMongoAuditing
+@EnableMongoRepositories(basePackages = "com.ceylonbatik.repository")
 public class MongoConfig {
 
     private static final Logger log = LoggerFactory.getLogger(MongoConfig.class);
@@ -28,9 +32,23 @@ public class MongoConfig {
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public MongoClient mongoClient() {
-        return MongoClients.create(mongoUri);
+        ConnectionString connectionString = new ConnectionString(mongoUri);
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .applyToClusterSettings(builder -> builder
+                        .serverSelectionTimeout(3, TimeUnit.SECONDS))
+                .applyToConnectionPoolSettings(builder -> builder
+                        .maxSize(50)
+                        .minSize(2)
+                        .maxConnectionIdleTime(60, TimeUnit.SECONDS)
+                        .maxWaitTime(5, TimeUnit.SECONDS))
+                .applyToSocketSettings(builder -> builder
+                        .connectTimeout(5, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS))
+                .build();
+        return MongoClients.create(settings);
     }
 
     @Bean
@@ -45,23 +63,13 @@ public class MongoConfig {
 
     @Bean
     public ApplicationRunner mongoConnectionLogger(MongoTemplate mongoTemplate) {
-
         return args -> {
-
             try {
-
-                mongoTemplate
-                        .getDb()
-                        .runCommand(new Document("ping", 1));
-
-                log.info("MongoDB connected successfully: {}", mongoTemplate.getDb().getName());
-
+                mongoTemplate.getDb().runCommand(new Document("ping", 1));
+                log.info("Connected to MongoDB successfully. Database: [{}]", mongoTemplate.getDb().getName());
             } catch (Exception exception) {
-
-                log.error("MongoDB connection failed: {}", exception.getMessage(), exception);
-
+                log.warn("MongoDB connection status: {}", exception.getMessage());
             }
-
         };
     }
 }

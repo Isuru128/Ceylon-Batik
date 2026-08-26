@@ -31,9 +31,6 @@ public class Admin {
     @Field("full_name")
     private String fullName;
 
-    @Field("role")
-    private String role = "SUPER_ADMIN";
-
     @Field("active")
     private boolean active = true;
 
@@ -46,12 +43,11 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(String username, String email, String password, String fullName, String role) {
+    public Admin(String username, String email, String password, String fullName) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
-        this.role = (role != null && !role.isBlank()) ? role : "SUPER_ADMIN";
         this.active = true;
         this.createdAt = LocalDateTime.now();
     }

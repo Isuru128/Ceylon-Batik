@@ -10,6 +10,8 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     List<Product> findByActiveTrue();
 
+    long countByActiveTrue();
+
     List<Product> findByCategoryIgnoreCaseAndActiveTrue(String category);
 
     Optional<Product> findBySlugAndActiveTrue(String slug);

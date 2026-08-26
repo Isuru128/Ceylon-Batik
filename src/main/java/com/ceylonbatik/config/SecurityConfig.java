@@ -1,15 +1,30 @@
 package com.ceylonbatik.config;
 
+import com.ceylonbatik.security.JwtAuthenticationEntryPoint;
+import com.ceylonbatik.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                          JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -20,18 +35,43 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // Disable CSRF for auth API endpoints (stateless login/register)
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")
-                )
+                // Disable CSRF for stateless REST endpoints
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
-                // Disable Spring's built-in form login and HTTP basic so they don't
-                // redirect to /login or pop up a browser auth dialog
+                // Disable Spring's built-in form login and HTTP basic dialogs
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(auth -> auth
+                // Stop private data caching on responses
+                .headers(headers -> headers
+                        .cacheControl(Customizer.withDefaults())
+                )
 
+                // Exception handling for unauthorized API requests
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                )
+
+                // Stateless session management
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                .authorizeHttpRequests(auth -> auth
+                        // Public Auth APIs
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/admin/login").permitAll()
+
+                        // Public product viewing
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+
+                        // Admin protected APIs (verified via admin JWT token)
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+
+                        // Static resources and view pages
                         .requestMatchers(
                                 "/",
                                 "/index.html",
@@ -53,23 +93,16 @@ public class SecurityConfig {
                                 "/profile.html",
                                 "/profile",
                                 "/admin/**",
-                                "/api/admin/**",
-                                "/api/auth/**",
-                                "/api/products/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
                         ).permitAll()
 
-                        .anyRequest()
-                        .authenticated()
+                        .anyRequest().authenticated()
                 )
 
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .permitAll()
-                );
+                // Register JWT authentication filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
