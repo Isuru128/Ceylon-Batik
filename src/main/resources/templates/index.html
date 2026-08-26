@@ -116,11 +116,6 @@
                     <div class="hero-actions">
                         <a class="btn btn-primary cb-btn" th:href="@{/shop.html}" href="shop.html">Shop Collection</a>
                         <a class="btn btn-outline-light cb-btn-outline" href="#story">Discover Craft</a>
-                        <div class="hero-card">
-                            <span class="card-kicker">AI Try-On</span>
-                            <p>Upload your photo on the product page and preview how the batik dress could look on you.
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -530,6 +525,25 @@
             </div>
         </div>
     </footer>
+
+    <!-- AI Try-On Pop-up Modal -->
+    <div class="ai-modal-backdrop" id="aiModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="aiModalTitle">
+        <div class="ai-modal-card">
+            <button class="ai-modal-close" type="button" id="closeAiModal" aria-label="Close pop-up">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="ai-modal-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <span class="card-kicker" id="aiModalTitle">AI Try-On</span>
+            <h2>Virtual Batik Preview</h2>
+            <p>Upload your photo on the product page and preview how the batik dress could look on you.</p>
+            <div class="ai-modal-actions">
+                <a th:href="@{/shop.html}" href="shop.html" class="btn btn-primary cb-btn">Shop Collection</a>
+                <button type="button" class="ai-modal-dismiss" id="dismissAiModal">Got It</button>
+            </div>
+        </div>
+    </div>
 
     <button class="back-to-top" type="button" id="backToTop" aria-label="Back to top">
         <i class="fa-solid fa-chevron-up"></i>
