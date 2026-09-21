@@ -1,7 +1,8 @@
 export const API_BASE_URL = (
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
-  'https://ceylon-batik-git-main-isuru128s-projects.vercel.app'
+  'https://ceylon-batik.vercel.app'
 ).replace(/\/+$/, '');
+
 
 export const getApiUrl = (endpoint) => {
   const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;

@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-const BACKEND_URL = 'https://ceylon-batik-git-main-isuru128s-projects.vercel.app'
+const BACKEND_URL = process.env.VITE_API_BASE_URL || 'https://ceylon-batik.vercel.app'
+
 
 // https://vite.dev/config/
 export default defineConfig({
