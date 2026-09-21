@@ -8,7 +8,14 @@ try {
   console.warn('[MongoDB] Note: Custom DNS server configuration skipped:', dnsErr.message);
 }
 
-export const connectDB = async (retries = 5, delay = 2000) => {
+let cachedConnection = null;
+
+export const connectDB = async (retries = 3, delay = 1500) => {
+  // If already connected, reuse connection (essential for Vercel serverless)
+  if (mongoose.connection.readyState >= 1) {
+    return mongoose.connection;
+  }
+
   const connUri = process.env.MONGODB_URI;
   const dbName = process.env.MONGODB_DATABASE || 'ceylonBatik';
 
@@ -20,7 +27,7 @@ export const connectDB = async (retries = 5, delay = 2000) => {
     try {
       const conn = await mongoose.connect(connUri, {
         dbName: dbName,
-        serverSelectionTimeoutMS: 8000
+        serverSelectionTimeoutMS: 5000
       });
 
       console.log(`[MongoDB] Connected successfully to host: ${conn.connection.host}, database: ${conn.connection.name}`);
@@ -28,10 +35,10 @@ export const connectDB = async (retries = 5, delay = 2000) => {
     } catch (error) {
       console.warn(`[MongoDB] Connection attempt ${attempt}/${retries} failed: ${error.message}`);
       if (attempt === retries) {
-        console.error('[MongoDB] Max connection retries reached. Exiting.');
-        process.exit(1);
+        throw new Error(`[MongoDB] Max connection retries reached: ${error.message}`);
       }
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 };
+

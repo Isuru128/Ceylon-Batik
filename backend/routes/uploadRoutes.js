@@ -12,9 +12,14 @@ const router = express.Router();
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '../uploads/products');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('[Upload] Note: Unable to create upload directory on read-only filesystem:', err.message);
 }
+
 
 // Multer storage — saves to /uploads/products with original filename (sanitized)
 const storage = multer.diskStorage({
