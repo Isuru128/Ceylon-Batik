@@ -1,212 +1,21 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
+import dns from 'node:dns';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {}
+
 import { Product } from '../models/Product.js';
-import { User } from '../models/User.js';
 import { Admin } from '../models/Admin.js';
-import { Order } from '../models/Order.js';
 import { Testimonial, CraftStep, StoreLocation, FAQ } from '../models/Content.js';
 
-const initialProducts = [
-  {
-    slug: 'island-bloom-batik-dress-set',
-    title: 'Island Bloom Batik Dress Set',
-    category: 'dresses',
-    categoryName: 'Cotton Dresses',
-    price: 6990,
-    oldPrice: 8950,
-    sku: 'CB-D214',
-    stock: 15,
-    inStock: true,
-    rating: 5,
-    reviewCount: 24,
-    tags: ['batik dress', 'cotton dress', 'handmade', 'island wear', 'resort wear'],
-    images: ['/images/01.jpeg', '/images/02.jpg', '/images/03.jpeg'],
-    description: 'A breathable cotton batik dress set with soft movement, vivid island color, and hand-finished pattern work for daytime events, holidays, and warm-weather occasions.',
-    specs: {
-      fabric: 'Cotton voile',
-      length: 'Midi length with coordinated batik finish',
-      washCare: 'Hand wash separately in cold water',
-      fit: 'Relaxed everyday fit'
-    },
-    isFeatured: true,
-    isSale: true
-  },
-  {
-    slug: 'heritage-wax-art-cotton-saree',
-    title: 'Heritage Wax Art Cotton Saree',
-    category: 'sarees',
-    categoryName: 'Handmade Sarees',
-    price: 9450,
-    oldPrice: null,
-    sku: 'CB-S2147',
-    stock: 8,
-    inStock: true,
-    rating: 4,
-    reviewCount: 18,
-    tags: ['batik saree', 'cotton saree', 'handmade saree', 'office wear', 'festive wear'],
-    images: ['/images/02.jpg', '/images/01.jpeg', '/images/03.jpeg'],
-    description: 'This saree is made of lightweight cotton fabric and finished with expressive wax-resist batik motifs. It is comfortable for office, school, festive, parties, outings, and weekend styling.',
-    specs: {
-      fabric: 'Cotton',
-      length: '7 yards, includes coordinated unstitched 1 yard blouse piece',
-      washCare: 'Handwash',
-      blouse: 'Included'
-    },
-    isFeatured: true,
-    isSale: false
-  },
-  {
-    slug: 'sunset-batik-sarong-couple-set',
-    title: 'Sunset Batik Sarong Couple Set',
-    category: 'couples',
-    categoryName: 'Couple Sets',
-    price: 10900,
-    oldPrice: 12500,
-    sku: 'CB-C110',
-    stock: 12,
-    inStock: true,
-    rating: 5,
-    reviewCount: 32,
-    tags: ['couple set', 'batik sarong', 'Sri Lankan batik', 'matching outfits'],
-    images: ['/images/03.jpeg', '/images/01.jpeg', '/images/02.jpg'],
-    description: 'A coordinated couple batik set with easy movement, breathable fabric, and balanced color placement for family events, resort stays, and cultural celebrations.',
-    specs: {
-      fabric: 'Cotton blend',
-      includes: 'Coordinated shirt and sarong styling',
-      washCare: 'Gentle hand wash',
-      occasion: 'Couple events and resort wear'
-    },
-    isFeatured: true,
-    isSale: true
-  },
-  {
-    slug: 'made-to-measure-batik-look',
-    title: 'Made-to-Measure Batik Look',
-    category: 'custom',
-    categoryName: 'Custom Orders',
-    price: 7500,
-    oldPrice: null,
-    sku: 'CB-MTM',
-    stock: 25,
-    inStock: true,
-    rating: 5,
-    reviewCount: 12,
-    tags: ['custom batik', 'made to measure', 'handmade', 'bespoke batik'],
-    images: ['/images/01.jpeg', '/images/02.jpg', '/images/03.jpeg'],
-    description: 'A custom batik order tailored around your preferred color story, garment type, and measurements. Designed for customers who want a more personal Sri Lankan batik look.',
-    specs: {
-      fabric: 'Selected after consultation',
-      timeline: 'Made to order',
-      washCare: 'Based on selected fabric',
-      sizing: 'Customer measurements required'
-    },
-    isFeatured: true,
-    isSale: false
-  },
-  {
-    slug: 'lagoon-breeze-batik-kaftan',
-    title: 'Lagoon Breeze Batik Kaftan',
-    category: 'dresses',
-    categoryName: 'Resort Wear',
-    price: 5850,
-    oldPrice: null,
-    sku: 'CB-K058',
-    stock: 18,
-    inStock: true,
-    rating: 5,
-    reviewCount: 15,
-    tags: ['kaftan', 'resort wear', 'batik dress', 'handmade batik'],
-    images: ['/images/01.jpeg', '/images/03.jpeg', '/images/02.jpg'],
-    description: 'A soft resort kaftan with generous movement and handcrafted batik color, made for relaxed weekends, holidays, poolside styling, and warm Sri Lankan weather.',
-    specs: {
-      fabric: 'Soft cotton blend',
-      length: 'Relaxed kaftan cut',
-      washCare: 'Cold hand wash',
-      fit: 'Free-flow silhouette'
-    },
-    isFeatured: true,
-    isSale: false
-  },
-  {
-    slug: 'blue-lotus-evening-batik-saree',
-    title: 'Blue Lotus Evening Batik Saree',
-    category: 'sarees',
-    categoryName: 'Silk Sarees',
-    price: 11750,
-    oldPrice: 14900,
-    sku: 'CB-S330',
-    stock: 6,
-    inStock: true,
-    rating: 5,
-    reviewCount: 41,
-    tags: ['blue saree', 'evening saree', 'batik saree', 'lotus pattern'],
-    images: ['/images/02.jpg', '/images/03.jpeg', '/images/01.jpeg'],
-    description: 'An evening-ready batik saree with blue lotus-inspired pattern work, refined drape, and a polished finish for dinners, receptions, and formal occasions.',
-    specs: {
-      fabric: 'Silk blend',
-      length: '7 yards',
-      washCare: 'Dry clean recommended',
-      finish: 'Evening batik finish'
-    },
-    isFeatured: true,
-    isSale: true
-  },
-  {
-    slug: 'temple-flower-shirt-and-sarong',
-    title: 'Temple Flower Shirt & Sarong',
-    category: 'sarongs',
-    categoryName: "Men's Batik",
-    price: 8400,
-    oldPrice: null,
-    sku: 'CB-M084',
-    stock: 14,
-    inStock: true,
-    rating: 4,
-    reviewCount: 19,
-    tags: ['mens batik', 'sarong', 'batik shirt', 'temple flower'],
-    images: ['/images/03.jpeg', '/images/02.jpg', '/images/01.jpeg'],
-    description: "A men's batik shirt and sarong look with strong floral pattern language, breathable wear, and a clean finish for gatherings, ceremonies, and resort styling.",
-    specs: {
-      fabric: 'Cotton blend',
-      includes: 'Shirt and sarong styling',
-      washCare: 'Hand wash separately',
-      fit: "Classic men's fit"
-    },
-    isFeatured: true,
-    isSale: false
-  },
-  {
-    slug: 'celebration-batik-gift-box',
-    title: 'Celebration Batik Gift Box',
-    category: 'gifts',
-    categoryName: 'Gift Ready',
-    price: 4950,
-    oldPrice: null,
-    sku: 'CB-G049',
-    stock: 20,
-    inStock: true,
-    rating: 5,
-    reviewCount: 29,
-    tags: ['batik gift', 'Sri Lankan souvenir', 'handmade gift', 'celebration box'],
-    images: ['/images/01.jpeg', '/images/02.jpg', '/images/03.jpeg'],
-    description: 'A curated batik gift selection with color, craft, and presentation in mind. Designed for birthdays, festival gifting, travel souvenirs, and thoughtful local presents.',
-    specs: {
-      contents: 'Curated batik gift selection',
-      packaging: 'Gift-ready presentation',
-      washCare: 'Care card included',
-      occasion: 'Celebrations and souvenirs'
-    },
-    isFeatured: true,
-    isSale: false
-  }
-];
 
 const initialLocations = [
   {
@@ -331,47 +140,39 @@ export const seedDatabase = async () => {
 
     console.log('[Seed] Connected to MongoDB Atlas...');
 
-    // 1. Seed Products if empty
+    // 1. Products collection is managed by Admin (no automatic mock products)
     const productCount = await Product.countDocuments();
-    if (productCount === 0) {
-      await Product.insertMany(initialProducts);
-      console.log(`[Seed] Seeded ${initialProducts.length} products.`);
-    } else {
-      console.log(`[Seed] Products collection already has ${productCount} items.`);
-    }
+    console.log(`[Seed] Products collection currently has ${productCount} item(s).`);
 
-    // 2. Seed Admin if not exists
+    // 2. Seed Admin account if none exists, or rotate default password
     const adminExists = await Admin.findOne({ username: 'admin' });
+    const adminPassword = process.env.ADMIN_PASSWORD;
     if (!adminExists) {
-      await Admin.create({
-        username: 'admin',
-        email: 'admin@ceylonbatik.lk',
-        password: 'admin123',
-        fullName: 'Ceylon Batik Administrator',
-        role: 'ROLE_ADMIN',
-        active: true
-      });
-      console.log('[Seed] Created default admin account (admin / admin123).');
+      if (!adminPassword) {
+        console.warn('[Seed] WARNING: ADMIN_PASSWORD is not set in .env — skipping admin account creation.');
+        console.warn('[Seed] Set ADMIN_PASSWORD in your .env file and restart the server to create the admin account.');
+      } else {
+        await Admin.create({
+          username: 'admin',
+          email: process.env.ADMIN_EMAIL || 'admin@ceylonbatik.lk',
+          password: adminPassword,
+          fullName: 'Ceylon Batik Administrator',
+          role: 'ROLE_ADMIN',
+          active: true
+        });
+        console.log('[Seed] Created admin account (username: admin).');
+      }
+    } else if (adminPassword) {
+      // Rotate password if the account still uses the old default
+      const isDefaultPassword = await adminExists.matchPassword('admin123');
+      if (isDefaultPassword) {
+        adminExists.password = adminPassword;
+        await adminExists.save();
+        console.log('[Seed] Admin password rotated from default to ADMIN_PASSWORD env value.');
+      }
     }
 
-    // 3. Seed Default Customer if not exists
-    const userExists = await User.findOne({ email: 'isurudula28@gmail.com' });
-    let demoUser = userExists;
-    if (!userExists) {
-      demoUser = await User.create({
-        fullName: 'Isuru Dulanjaya',
-        email: 'isurudula28@gmail.com',
-        phone: '+94 77 123 4567',
-        password: 'isuru123',
-        address: 'No 45, Temple Road',
-        city: 'Colombo 03',
-        role: 'USER',
-        ordersCount: 2
-      });
-      console.log('[Seed] Created default customer account (isurudula28@gmail.com / isuru123).');
-    }
-
-    // 4. Seed Content if empty
+    // 3. Seed Content if empty
     const testCount = await Testimonial.countDocuments();
     if (testCount === 0) {
       await Testimonial.insertMany(initialTestimonials);
@@ -394,74 +195,6 @@ export const seedDatabase = async () => {
     if (faqCount === 0) {
       await FAQ.insertMany(initialFaqs);
       console.log(`[Seed] Seeded ${initialFaqs.length} FAQs.`);
-    }
-
-    // 5. Seed sample orders if empty
-    const orderCount = await Order.countDocuments();
-    if (orderCount === 0) {
-      await Order.create([
-        {
-          orderNumber: 'CB-ORD-8921',
-          user: demoUser?._id || null,
-          customer: {
-            fullName: 'Sanduni Perera',
-            email: 'sanduni@example.com',
-            phone: '+94 71 456 7890',
-            address: '14/2 Park Street',
-            city: 'Colombo 02'
-          },
-          items: [
-            {
-              id: '2',
-              slug: 'heritage-wax-art-cotton-saree',
-              title: 'Heritage Wax Art Cotton Saree',
-              price: 9450,
-              quantity: 1,
-              size: 'Standard',
-              image: '/images/02.jpg',
-              category: 'sarees'
-            }
-          ],
-          subtotal: 9450,
-          shipping: 0,
-          discountAmount: 0,
-          total: 9450,
-          paymentMethod: 'kokoPay',
-          status: 'Shipped',
-          trackingNumber: 'DOM-782910-LK'
-        },
-        {
-          orderNumber: 'CB-ORD-7402',
-          user: demoUser?._id || null,
-          customer: {
-            fullName: 'Isuru Dulanjaya',
-            email: 'isurudula28@gmail.com',
-            phone: '+94 77 123 4567',
-            address: 'No 45, Temple Road',
-            city: 'Colombo 03'
-          },
-          items: [
-            {
-              id: '3',
-              slug: 'sunset-batik-sarong-couple-set',
-              title: 'Sunset Batik Sarong Couple Set',
-              price: 10900,
-              quantity: 1,
-              size: 'Standard',
-              image: '/images/03.jpeg',
-              category: 'couples'
-            }
-          ],
-          subtotal: 10900,
-          shipping: 0,
-          discountAmount: 0,
-          total: 10900,
-          paymentMethod: 'cod',
-          status: 'Delivered',
-          trackingNumber: 'DOM-623419-LK'
-        }
-      ]);
-      console.log('[Seed] Seeded sample orders.');
     }
 
     console.log('[Seed] Database initialization completed successfully.');
