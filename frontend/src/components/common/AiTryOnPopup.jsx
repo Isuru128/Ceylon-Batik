@@ -74,12 +74,12 @@ export const AiTryOnPopup = ({ isOpen, onClose }) => {
         {/* Actions */}
         <div className="ai-modal-actions">
           <Link
-            to="/product/island-bloom-batik-dress-set"
+            to="/shop"
             onClick={onClose}
             className="btn btn-pink cb-btn"
           >
             <i className="fa-solid fa-person-dress" style={{ marginRight: '4px' }}></i>
-            Try On A Design Now
+            Browse Designs &amp; Try On
           </Link>
           <button
             type="button"
