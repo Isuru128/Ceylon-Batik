@@ -280,19 +280,29 @@ export const HomePage = () => {
           )}
 
           {/* Products Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '28px'
-          }}>
-            {paginatedProducts.map((prod) => (
-              <ProductCard
-                key={prod.id}
-                product={prod}
-                onQuickView={setQuickViewProduct}
-              />
-            ))}
-          </div>
+          {paginatedProducts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 20px', background: 'var(--batik-bg-alt)', borderRadius: '16px' }}>
+              <i className="fa-solid fa-sparkles" style={{ fontSize: '2rem', color: 'var(--batik-pink)', marginBottom: '12px', display: 'block' }}></i>
+              <h3 style={{ color: 'var(--batik-ink)', marginBottom: '8px' }}>Handcrafted Batik Creations Coming Soon</h3>
+              <p style={{ color: 'var(--batik-muted)', fontSize: '0.92rem', maxWidth: '480px', margin: '0 auto 16px', lineHeight: 1.6 }}>
+                Our artisans are preparing fresh seasonal batik sarees, dresses, and couple sets. New designs will appear here as soon as they are published.
+              </p>
+            </div>
+          ) : (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '28px'
+            }}>
+              {paginatedProducts.map((prod) => (
+                <ProductCard
+                  key={prod.id || prod._id}
+                  product={prod}
+                  onQuickView={setQuickViewProduct}
+                />
+              ))}
+            </div>
+          )}
 
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
             <Link to="/shop" className="btn btn-outline" style={{ padding: '12px 36px' }}>
@@ -313,17 +323,19 @@ export const HomePage = () => {
         <div className="cb-container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
             <div>
-              <span className="eyebrow" style={{ color: 'var(--batik-pink)' }}>Next-Gen Island Fashion</span>
-              <h2 style={{ fontSize: '2.8rem', color: '#fff', margin: '12px 0 20px', lineHeight: 1.2 }}>
-                Try On Handcrafted Batik From Anywhere With AI
+              <span className="badge" style={{ background: 'rgba(255, 144, 188, 0.25)', color: '#ff90bc', border: '1px solid rgba(255,144,188,0.4)', marginBottom: '16px', display: 'inline-flex' }}>
+                <i className="fa-solid fa-sparkles" style={{ marginRight: '6px' }}></i> AI Virtual Fitting Experience
+              </span>
+              <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.6rem)', fontWeight: 800, lineHeight: 1.25, marginBottom: '20px' }}>
+                See How Ceylon Batik Drapes On You Before You Buy
               </h2>
               <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '28px' }}>
                 Wondering how the drape of an authentic Ceylon batik saree or a sunset couple sarong looks on you?
                 Upload a portrait or selfie, and our AI preview composite will render a realistic fitting demonstration directly in your browser.
               </p>
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <Link to="/product/island-bloom-batik-dress-set" className="btn fit-on-me-btn">
-                  <i className="fa-solid fa-wand-magic-sparkles"></i> Try "Fit On Me" Now
+                <Link to="/shop" className="btn fit-on-me-btn">
+                  <i className="fa-solid fa-wand-magic-sparkles"></i> Try "Fit On Me" in Shop
                 </Link>
                 <button
                   type="button"
