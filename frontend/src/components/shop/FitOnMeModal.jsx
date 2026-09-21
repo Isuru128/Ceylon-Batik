@@ -220,18 +220,12 @@ export const FitOnMeModal = ({ product, isOpen, onClose }) => {
       if (remoteResult && remoteResult.imageUrl) {
         setGeneratedPreview(remoteResult.imageUrl);
         setShowGarmentOriginal(false);
-        setStatusMessage('AI Virtual Try-On completed via IDM-VTON serverless GPU!');
+        setStatusMessage(remoteResult.message || 'AI Virtual Try-On completed via Replicate IDM-VTON!');
         addToast(`Try-on preview generated! (${Math.max(0, MAX_TRYONS_PER_SESSION - updatedUsed)} remaining)`, 'success');
         return;
       }
 
-      // 2. Render virtual fit canvas fallback if GPU serverless endpoint is not set
-      const renderedTryOn = await generateCanvasPreview(customerImage, productImage);
-
-      setGeneratedPreview(renderedTryOn);
-      setShowGarmentOriginal(false);
-      setStatusMessage('Virtual try-on ready! You are now viewing this outfit on your portrait.');
-      addToast(`Try-on preview generated! (${Math.max(0, MAX_TRYONS_PER_SESSION - updatedUsed)} remaining)`, 'success');
+      throw new Error(remoteResult?.message || 'Unable to generate virtual try-on preview.');
     } catch (err) {
       console.error('Fit generation error:', err);
       const errMsg = err.message || 'Unable to render try-on preview.';
