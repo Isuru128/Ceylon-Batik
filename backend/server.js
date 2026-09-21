@@ -10,6 +10,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
 import fitOnMeRoutes from './routes/fitOnMeRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -25,6 +26,9 @@ app.use(cors({
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve uploaded product images as static files
+app.use('/uploads', express.static('uploads'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -42,6 +46,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/fit-on-me', fitOnMeRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // 404 handler for API routes
 app.use('/api/*', (req, res) => {
