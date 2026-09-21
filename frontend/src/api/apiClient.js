@@ -1,13 +1,24 @@
 export const apiClient = {
   // Auth Token helpers
-  getToken() {
+  getAdminToken() {
     try {
-      const user = JSON.parse(localStorage.getItem('user') || 'null');
-      if (user && user.token) return user.token;
       const admin = JSON.parse(localStorage.getItem('adminUser') || 'null');
       if (admin && admin.token) return admin.token;
     } catch {}
     return null;
+  },
+
+  getUserToken() {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (user && user.token) return user.token;
+    } catch {}
+    return null;
+  },
+
+  getToken() {
+    // Prefer admin token if admin is logged in, otherwise customer user token
+    return this.getAdminToken() || this.getUserToken();
   },
 
   getAuthHeaders(customHeaders = {}) {
@@ -16,6 +27,18 @@ export const apiClient = {
       ...customHeaders
     };
     const token = this.getToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
+  },
+
+  getAdminAuthHeaders(customHeaders = {}) {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...customHeaders
+    };
+    const token = this.getAdminToken() || this.getToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -54,13 +77,14 @@ export const apiClient = {
   },
 
   async saveProduct(product) {
-    const isNew = !product.id || String(product.id).startsWith('temp_');
-    const url = isNew ? '/api/products' : `/api/products/${product.id}`;
+    const id = product.id || product._id;
+    const isNew = !id || String(id).startsWith('temp_');
+    const url = isNew ? '/api/products' : `/api/products/${id}`;
     const method = isNew ? 'POST' : 'PUT';
 
     const res = await fetch(url, {
       method,
-      headers: this.getAuthHeaders(),
+      headers: this.getAdminAuthHeaders(),
       body: JSON.stringify(product)
     });
 
@@ -75,7 +99,7 @@ export const apiClient = {
   async deleteProduct(id) {
     const res = await fetch(`/api/products/${id}`, {
       method: 'DELETE',
-      headers: this.getAuthHeaders()
+      headers: this.getAdminAuthHeaders()
     });
 
     if (!res.ok) {
@@ -174,7 +198,7 @@ export const apiClient = {
   async getAdminStats() {
     try {
       const res = await fetch('/api/admin/stats', {
-        headers: this.getAuthHeaders()
+        headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
     } catch (err) {
@@ -192,7 +216,7 @@ export const apiClient = {
   async getAdminUsers() {
     try {
       const res = await fetch('/api/admin/users', {
-        headers: this.getAuthHeaders()
+        headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
     } catch (err) {
@@ -204,7 +228,7 @@ export const apiClient = {
   async getAdminOrders() {
     try {
       const res = await fetch('/api/admin/orders', {
-        headers: this.getAuthHeaders()
+        headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
     } catch (err) {
@@ -216,7 +240,7 @@ export const apiClient = {
   async updateOrderStatus(orderId, status) {
     const res = await fetch(`/api/admin/orders/${encodeURIComponent(orderId)}/status`, {
       method: 'PUT',
-      headers: this.getAuthHeaders(),
+      headers: this.getAdminAuthHeaders(),
       body: JSON.stringify({ status })
     });
     if (!res.ok) {
