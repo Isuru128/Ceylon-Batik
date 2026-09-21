@@ -7,15 +7,59 @@ import { generateToken, protect, adminOnly } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// @route   POST /api/admin/create
+// @desc    Create the admin account (only if no admin exists yet — first-time setup)
+// @access  Public (blocked once an admin already exists)
+router.post('/create', async (req, res) => {
+  try {
+    const adminCount = await Admin.countDocuments();
+    if (adminCount > 0) {
+      return res.status(403).json({
+        message: 'Admin account already exists. Use POST /api/admin/login to authenticate.'
+      });
+    }
+
+    const { username, email, password, fullName } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'username, email and password are required' });
+    }
+
+    const admin = await Admin.create({
+      username: username.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      password,
+      fullName: fullName || username,
+      role: 'ROLE_ADMIN',
+      active: true
+    });
+
+    const token = generateToken(admin._id, admin.role);
+
+    res.status(201).json({
+      message: 'Admin account created successfully',
+      token,
+      id: admin._id,
+      username: admin.username,
+      email: admin.email,
+      fullName: admin.fullName,
+      role: admin.role
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create admin account', error: error.message });
+  }
+});
+
 // @route   POST /api/admin/login
-// @desc    Admin login
+// @desc    Admin login — returns JWT
+// @access  Public
 router.post('/login', async (req, res) => {
   try {
     const { contact, username, password } = req.body;
     const identifier = (contact || username || '').trim().toLowerCase();
 
     if (!identifier || !password) {
-      return res.status(400).json({ message: 'Please provide admin username and password' });
+      return res.status(400).json({ message: 'Please provide admin username/email and password' });
     }
 
     const admin = await Admin.findOne({
@@ -26,6 +70,7 @@ router.post('/login', async (req, res) => {
       const token = generateToken(admin._id, admin.role || 'ROLE_ADMIN');
       return res.json({
         token,
+        id: admin._id,
         username: admin.username,
         fullName: admin.fullName,
         email: admin.email,
@@ -40,19 +85,30 @@ router.post('/login', async (req, res) => {
 });
 
 // @route   GET /api/admin/me
-// @desc    Current admin profile
+// @desc    Get current admin profile
+// @access  Private (admin JWT required)
 router.get('/me', protect, adminOnly, async (req, res) => {
-  res.json({
-    id: req.user._id,
-    username: req.user.username,
-    email: req.user.email,
-    fullName: req.user.fullName,
-    role: req.user.role
-  });
+  try {
+    const admin = await Admin.findById(req.user._id).select('-password');
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+
+    res.json({
+      id: admin._id,
+      username: admin.username,
+      email: admin.email,
+      fullName: admin.fullName,
+      role: admin.role,
+      active: admin.active,
+      createdAt: admin.createdAt
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch admin profile', error: error.message });
+  }
 });
 
 // @route   GET /api/admin/stats
 // @desc    Aggregated dashboard analytics
+// @access  Private (admin JWT required)
 router.get('/stats', protect, adminOnly, async (req, res) => {
   try {
     const [productCount, userCount, orders] = await Promise.all([
@@ -78,6 +134,7 @@ router.get('/stats', protect, adminOnly, async (req, res) => {
 
 // @route   GET /api/admin/users
 // @desc    List all registered customers
+// @access  Private (admin JWT required)
 router.get('/users', protect, adminOnly, async (req, res) => {
   try {
     const users = await User.find().select('-password').sort({ createdAt: -1 });
@@ -99,6 +156,7 @@ router.get('/users', protect, adminOnly, async (req, res) => {
 
 // @route   GET /api/admin/orders
 // @desc    List all customer orders
+// @access  Private (admin JWT required)
 router.get('/orders', protect, adminOnly, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -114,7 +172,13 @@ router.get('/orders', protect, adminOnly, async (req, res) => {
       total: o.total,
       subtotal: o.subtotal,
       shipping: o.shipping,
-      method: o.paymentMethod === 'cod' ? 'Cash on Delivery' : (o.paymentMethod === 'kokoPay' ? 'KokoPay' : (o.paymentMethod === 'mintPay' ? 'MintPay' : 'Card')),
+      method: o.paymentMethod === 'cod'
+        ? 'Cash on Delivery'
+        : o.paymentMethod === 'kokoPay'
+          ? 'KokoPay'
+          : o.paymentMethod === 'mintPay'
+            ? 'MintPay'
+            : 'Card',
       status: o.status,
       date: new Date(o.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
       trackingNumber: o.trackingNumber
@@ -126,7 +190,8 @@ router.get('/orders', protect, adminOnly, async (req, res) => {
 });
 
 // @route   PUT /api/admin/orders/:id/status
-// @desc    Update order status
+// @desc    Update order fulfillment status
+// @access  Private (admin JWT required)
 router.put('/orders/:id/status', protect, adminOnly, async (req, res) => {
   try {
     const { id } = req.params;
@@ -142,7 +207,12 @@ router.put('/orders/:id/status', protect, adminOnly, async (req, res) => {
 
     order.status = status;
     await order.save();
-    res.json({ message: 'Order status updated successfully', orderNumber: order.orderNumber, status: order.status });
+
+    res.json({
+      message: 'Order status updated successfully',
+      orderNumber: order.orderNumber,
+      status: order.status
+    });
   } catch (error) {
     res.status(400).json({ message: 'Failed to update order status', error: error.message });
   }
