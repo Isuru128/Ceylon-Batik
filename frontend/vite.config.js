@@ -1,6 +1,8 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+const BACKEND_URL = 'https://ceylon-batik-git-main-isuru128s-projects.vercel.app'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -8,15 +10,16 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
       '/uploads': {
-        target: 'http://localhost:5000',
+        target: BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
     },
   },
 })
+

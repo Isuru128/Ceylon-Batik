@@ -81,18 +81,8 @@ export const ProductModal = ({ isOpen, onClose, onSave, product }) => {
     }
     const toUpload = Array.from(files).slice(0, remaining);
     setUploading(true);
-    setUploadError('');
     try {
-      const fd = new FormData();
-      toUpload.forEach((f) => fd.append('images', f));
-      const token = apiClient.getAdminToken() || apiClient.getToken();
-      const res = await fetch('/api/upload/product-images', {
-        method: 'POST',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        body: fd
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Upload failed');
+      const data = await apiClient.uploadProductImages(toUpload);
       setFormData((prev) => ({ ...prev, images: [...prev.images, ...data.urls] }));
     } catch (err) {
       setUploadError(err.message);

@@ -1,3 +1,32 @@
+export const API_BASE_URL = (
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
+  'https://ceylon-batik-git-main-isuru128s-projects.vercel.app'
+).replace(/\/+$/, '');
+
+export const getApiUrl = (endpoint) => {
+  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${API_BASE_URL}${path}`;
+};
+
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) return '/images/01.jpeg';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('data:')) {
+    return imagePath;
+  }
+  if (imagePath.startsWith('/uploads')) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+  return imagePath;
+};
+
+const normalizeProduct = (p) => {
+  if (!p) return p;
+  return {
+    ...p,
+    images: (p.images || []).map(img => getImageUrl(img))
+  };
+};
+
 export const apiClient = {
   // Auth Token helpers
   getAdminToken() {
@@ -48,13 +77,14 @@ export const apiClient = {
   // ── Products API ──
   async getProducts(category) {
     try {
-      let url = '/api/products';
+      let url = getApiUrl('/api/products');
       if (category && category !== 'all') {
         url += `?category=${encodeURIComponent(category)}`;
       }
       const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        return Array.isArray(data) ? data.map(normalizeProduct) : [];
       }
     } catch (err) {
       console.error('Error fetching products from backend:', err);
@@ -64,11 +94,12 @@ export const apiClient = {
 
   async getProductBySlug(slug) {
     try {
-      const res = await fetch(`/api/products/${encodeURIComponent(slug)}`, {
+      const res = await fetch(getApiUrl(`/api/products/${encodeURIComponent(slug)}`), {
         headers: { 'Accept': 'application/json' }
       });
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        return normalizeProduct(data);
       }
     } catch (err) {
       console.error('Error looking up product by slug:', err);
@@ -79,7 +110,7 @@ export const apiClient = {
   async saveProduct(product) {
     const id = product.id || product._id;
     const isNew = !id || String(id).startsWith('temp_');
-    const url = isNew ? '/api/products' : `/api/products/${id}`;
+    const url = isNew ? getApiUrl('/api/products') : getApiUrl(`/api/products/${id}`);
     const method = isNew ? 'POST' : 'PUT';
 
     const res = await fetch(url, {
@@ -93,11 +124,12 @@ export const apiClient = {
       throw new Error(errorData.message || 'Failed to save product on server');
     }
 
-    return await res.json();
+    const saved = await res.json();
+    return normalizeProduct(saved);
   },
 
   async deleteProduct(id) {
-    const res = await fetch(`/api/products/${id}`, {
+    const res = await fetch(getApiUrl(`/api/products/${id}`), {
       method: 'DELETE',
       headers: this.getAdminAuthHeaders()
     });
@@ -110,9 +142,23 @@ export const apiClient = {
     return true;
   },
 
+  async uploadProductImages(files) {
+    const fd = new FormData();
+    files.forEach((f) => fd.append('images', f));
+    const token = this.getAdminToken() || this.getToken();
+    const res = await fetch(getApiUrl('/api/upload/product-images'), {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: fd
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Upload failed');
+    return data;
+  },
+
   // ── Customer Auth ──
   async login(contact, password) {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(getApiUrl('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contact, password })
@@ -130,7 +176,7 @@ export const apiClient = {
   },
 
   async register(data) {
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(getApiUrl('/api/auth/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -149,7 +195,7 @@ export const apiClient = {
 
   async getProfile() {
     try {
-      const res = await fetch('/api/auth/profile', {
+      const res = await fetch(getApiUrl('/api/auth/profile'), {
         headers: this.getAuthHeaders()
       });
       if (res.ok) return await res.json();
@@ -160,7 +206,7 @@ export const apiClient = {
   },
 
   async updateProfile(profileData) {
-    const res = await fetch('/api/auth/profile', {
+    const res = await fetch(getApiUrl('/api/auth/profile'), {
       method: 'PUT',
       headers: this.getAuthHeaders(),
       body: JSON.stringify(profileData)
@@ -178,7 +224,7 @@ export const apiClient = {
 
   // ── Admin Auth & Management ──
   async adminLogin(contact, password) {
-    const res = await fetch('/api/admin/login', {
+    const res = await fetch(getApiUrl('/api/admin/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contact, password })
@@ -197,7 +243,7 @@ export const apiClient = {
 
   async getAdminStats() {
     try {
-      const res = await fetch('/api/admin/stats', {
+      const res = await fetch(getApiUrl('/api/admin/stats'), {
         headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
@@ -215,7 +261,7 @@ export const apiClient = {
 
   async getAdminUsers() {
     try {
-      const res = await fetch('/api/admin/users', {
+      const res = await fetch(getApiUrl('/api/admin/users'), {
         headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
@@ -227,7 +273,7 @@ export const apiClient = {
 
   async getAdminOrders() {
     try {
-      const res = await fetch('/api/admin/orders', {
+      const res = await fetch(getApiUrl('/api/admin/orders'), {
         headers: this.getAdminAuthHeaders()
       });
       if (res.ok) return await res.json();
@@ -238,7 +284,7 @@ export const apiClient = {
   },
 
   async updateOrderStatus(orderId, status) {
-    const res = await fetch(`/api/admin/orders/${encodeURIComponent(orderId)}/status`, {
+    const res = await fetch(getApiUrl(`/api/admin/orders/${encodeURIComponent(orderId)}/status`), {
       method: 'PUT',
       headers: this.getAdminAuthHeaders(),
       body: JSON.stringify({ status })
@@ -252,7 +298,7 @@ export const apiClient = {
 
   // ── Orders API ──
   async createOrder(orderPayload) {
-    const res = await fetch('/api/orders', {
+    const res = await fetch(getApiUrl('/api/orders'), {
       method: 'POST',
       headers: this.getAuthHeaders(),
       body: JSON.stringify(orderPayload)
@@ -268,7 +314,7 @@ export const apiClient = {
 
   async getMyOrders(email) {
     try {
-      const url = email ? `/api/orders/my-orders?email=${encodeURIComponent(email)}` : '/api/orders/my-orders';
+      const url = email ? getApiUrl(`/api/orders/my-orders?email=${encodeURIComponent(email)}`) : getApiUrl('/api/orders/my-orders');
       const res = await fetch(url, {
         headers: this.getAuthHeaders()
       });
@@ -282,7 +328,7 @@ export const apiClient = {
   // ── Dynamic Site Content (Testimonials, FAQs, Locations, Craft Steps) ──
   async getTestimonials() {
     try {
-      const res = await fetch('/api/content/testimonials');
+      const res = await fetch(getApiUrl('/api/content/testimonials'));
       if (res.ok) return await res.json();
     } catch (err) {
       console.error('Error fetching testimonials:', err);
@@ -292,7 +338,7 @@ export const apiClient = {
 
   async getCraftSteps() {
     try {
-      const res = await fetch('/api/content/craft-steps');
+      const res = await fetch(getApiUrl('/api/content/craft-steps'));
       if (res.ok) return await res.json();
     } catch (err) {
       console.error('Error fetching craft steps:', err);
@@ -302,7 +348,7 @@ export const apiClient = {
 
   async getStoreLocations() {
     try {
-      const res = await fetch('/api/content/locations');
+      const res = await fetch(getApiUrl('/api/content/locations'));
       if (res.ok) return await res.json();
     } catch (err) {
       console.error('Error fetching store locations:', err);
@@ -312,7 +358,7 @@ export const apiClient = {
 
   async getFaqs() {
     try {
-      const res = await fetch('/api/content/faqs');
+      const res = await fetch(getApiUrl('/api/content/faqs'));
       if (res.ok) return await res.json();
     } catch (err) {
       console.error('Error fetching FAQs:', err);
@@ -331,7 +377,7 @@ export const apiClient = {
   },
 
   async generateFitPreview({ customerImage, productTitle, productImage, customerGender, garmentGender, productCategory, productTags }) {
-    const res = await fetch('/api/fit-on-me', {
+    const res = await fetch(getApiUrl('/api/fit-on-me'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -346,3 +392,4 @@ export const apiClient = {
     return data;
   }
 };
+
