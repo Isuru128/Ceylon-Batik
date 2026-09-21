@@ -164,7 +164,7 @@ export const AdminDashboardPage = () => {
                 <div>
                   <span style={{ fontSize: '0.82rem', color: 'var(--batik-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Total Revenue</span>
                   <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--batik-ink)', marginTop: '4px' }}>Rs. {(stats.totalRevenue || 0).toLocaleString()}</div>
-                  <small style={{ color: '#16a34a', fontWeight: 600 }}>From MongoDB Atlas</small>
+                  <small style={{ color: '#16a34a', fontWeight: 600 }}></small>
                 </div>
                 <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'rgba(255,144,188,0.2)', color: 'var(--batik-pink)', display: 'grid', placeItems: 'center', fontSize: '1.4rem' }}>
                   <i className="fa-solid fa-coins"></i>
@@ -273,47 +273,81 @@ export const AdminDashboardPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((p) => (
-                    <tr key={p.id} style={{ borderBottom: '1px solid var(--batik-border)', fontSize: '0.9rem' }}>
-                      <td style={{ padding: '14px 16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <img src={p.images?.[0] || '/images/01.jpeg'} alt={p.title} style={{ width: '44px', height: '54px', objectFit: 'cover', borderRadius: '6px' }} />
-                          <div>
-                            <strong style={{ display: 'block', color: 'var(--batik-ink)' }}>{p.title}</strong>
-                            <small style={{ color: 'var(--batik-muted)' }}>SKU: {p.sku || 'N/A'}</small>
+                  {products.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '50px 20px', color: 'var(--batik-muted)' }}>
+                        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+                          <div style={{
+                            width: '64px',
+                            height: '64px',
+                            borderRadius: '50%',
+                            background: 'rgba(255,144,188,0.15)',
+                            color: 'var(--batik-pink)',
+                            display: 'grid',
+                            placeItems: 'center',
+                            fontSize: '1.8rem',
+                            margin: '0 auto 16px'
+                          }}>
+                            <i className="fa-solid fa-box-open"></i>
                           </div>
+                          <h3 style={{ margin: '0 0 8px', color: 'var(--batik-ink)', fontSize: '1.15rem' }}>No Products in Catalog</h3>
+                          <p style={{ margin: '0 0 20px', fontSize: '0.88rem', color: 'var(--batik-muted)', lineHeight: 1.5 }}>
+                            The catalog is completely clean and ready for your original batik creations. Click below to add your first design.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleCreateNew}
+                            className="btn btn-pink"
+                            style={{ padding: '9px 24px', fontSize: '0.88rem' }}
+                          >
+                            <i className="fa-solid fa-plus"></i> Add First Product
+                          </button>
                         </div>
                       </td>
-                      <td style={{ padding: '14px 16px' }}>{p.categoryName || p.category}</td>
-                      <td style={{ padding: '14px 16px', fontWeight: 600 }}>Rs. {p.price?.toLocaleString()}</td>
-                      <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontWeight: 600, color: (p.stock || 10) < 5 ? '#ef4444' : '#16a34a' }}>
-                          {p.stock || 10} in stock
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 16px' }}>
-                        {p.isFeatured ? <span style={{ color: '#16a34a' }}>✓ Yes</span> : <span style={{ color: 'var(--batik-muted)' }}>-</span>}
-                      </td>
-                      <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                        <button
-                          type="button"
-                          onClick={() => handleEdit(p)}
-                          style={{ color: 'var(--batik-ink)', marginRight: '14px', cursor: 'pointer' }}
-                          title="Edit"
-                        >
-                          <i className="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(p.id, p.title)}
-                          style={{ color: '#ef4444', cursor: 'pointer' }}
-                          title="Delete"
-                        >
-                          <i className="fa-solid fa-trash-can"></i>
-                        </button>
-                      </td>
                     </tr>
-                  ))}
+                  ) : (
+                    products.map((p) => (
+                      <tr key={p.id || p._id} style={{ borderBottom: '1px solid var(--batik-border)', fontSize: '0.9rem' }}>
+                        <td style={{ padding: '14px 16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src={p.images?.[0] || '/images/01.jpeg'} alt={p.title} style={{ width: '44px', height: '54px', objectFit: 'cover', borderRadius: '6px' }} />
+                            <div>
+                              <strong style={{ display: 'block', color: 'var(--batik-ink)' }}>{p.title}</strong>
+                              <small style={{ color: 'var(--batik-muted)' }}>SKU: {p.sku || 'N/A'}</small>
+                            </div>
+                          </div>
+                        </td>
+                        <td style={{ padding: '14px 16px' }}>{p.categoryName || p.category}</td>
+                        <td style={{ padding: '14px 16px', fontWeight: 600 }}>Rs. {p.price?.toLocaleString()}</td>
+                        <td style={{ padding: '14px 16px' }}>
+                          <span style={{ fontWeight: 600, color: (p.stock || 10) < 5 ? '#ef4444' : '#16a34a' }}>
+                            {p.stock ?? 0} in stock
+                          </span>
+                        </td>
+                        <td style={{ padding: '14px 16px' }}>
+                          {p.isFeatured ? <span style={{ color: '#16a34a' }}>✓ Yes</span> : <span style={{ color: 'var(--batik-muted)' }}>-</span>}
+                        </td>
+                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                          <button
+                            type="button"
+                            onClick={() => handleEdit(p)}
+                            style={{ color: 'var(--batik-ink)', marginRight: '14px', cursor: 'pointer' }}
+                            title="Edit"
+                          >
+                            <i className="fa-solid fa-pen-to-square"></i>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(p.id || p._id, p.title)}
+                            style={{ color: '#ef4444', cursor: 'pointer' }}
+                            title="Delete"
+                          >
+                            <i className="fa-solid fa-trash-can"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             )}
