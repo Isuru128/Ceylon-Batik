@@ -127,25 +127,6 @@ export const AdminLoginPage = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <button
-            type="button"
-            onClick={handleFillDemo}
-            style={{
-              fontSize: '0.82rem',
-              color: 'var(--batik-ink)',
-              background: 'var(--batik-bg-alt)',
-              border: '1px dashed var(--batik-border)',
-              padding: '6px 14px',
-              borderRadius: 'var(--radius-full)',
-              cursor: 'pointer'
-            }}
-          >
-            <i className="fa-solid fa-wand-magic-sparkles" style={{ marginRight: '6px', color: 'var(--batik-pink)' }}></i>
-            Fill Demo Admin (admin / admin123)
-          </button>
-        </div>
-
         <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--batik-border)', textAlign: 'center' }}>
           <Link to="/" style={{ color: 'var(--batik-muted)', fontSize: '0.88rem' }}>
             ← Return to Customer Storefront
