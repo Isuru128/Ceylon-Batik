@@ -19,10 +19,13 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'ceylon_batik_secret');
 
-      if (decoded.role === 'ROLE_ADMIN') {
+      if (decoded.role === 'ROLE_ADMIN' || decoded.role === 'ADMIN') {
         req.user = await Admin.findById(decoded.id).select('-password');
       } else {
         req.user = await User.findById(decoded.id).select('-password');
+        if (!req.user) {
+          req.user = await Admin.findById(decoded.id).select('-password');
+        }
       }
 
       if (!req.user) {
